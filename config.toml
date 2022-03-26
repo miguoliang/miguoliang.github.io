@@ -1,0 +1,24 @@
+baseURL = 'https://miguoliang.com/'
+languageCode = 'en-us'
+title = "Mi's Blog"
+theme = 'hugo-coder'
+
+[params]
+author = "Mi Guoliang"
+keywords = "blog,developer,personal,quantitative trading"
+description = "Mi Guoliang's personal website"
+
+[[languages.en.menu.main]]
+name = "Blog"
+weight = 2
+url = "posts/"
+
+[[languages.en.menu.main]]
+name = "Zen Quant"
+weight = 3
+url = "zen_quant/"
+
+[[languages.en.menu.main]]
+name = "Contact me"
+weight = 5
+url = "contact/"
