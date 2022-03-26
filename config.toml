@@ -9,7 +9,7 @@ keywords = "blog,developer,personal,quantitative trading"
 description = "Mi Guoliang's personal website"
 
 [params.googleTagManager]
-id = "308454388"
+id = "G-3XTC5Q3D4Y"
 
 [[languages.en.menu.main]]
 name = "Blog"
