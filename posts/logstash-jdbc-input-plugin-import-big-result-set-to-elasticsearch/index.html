@@ -1,0 +1,48 @@
+<!doctype html><html lang=en><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=color-scheme content="light dark"><meta name=author content="Mi Guoliang"><meta name=description content="Editing your logstash configuration file, and generally you can find it/them in /etc/logstash/conf.d; it depends on your settings in logstash.yml that is in /etc/logstash/logstash.yml.
+For example, if you want to import data from your table in the database, you should have a configuration file, and we name it logstash-example.conf, open and append lines like below:
+input { stdin { } jdbc { jdbc_connection_string => &#34;jdbc:mysql://host:port/database&#34; jdbc_user => &#34;username&#34; jdbc_password => &#34;password&#34; jdbc_driver_library => &#34;/opt/drivers/mysql-connector-java-5."><meta name=keywords content="blog,developer,personal,quantitative trading"><meta name=twitter:card content="summary"><meta name=twitter:title content="Logstash Jdbc Input Plugin Import Big Result Set to Elasticsearch"><meta name=twitter:description content="Editing your logstash configuration file, and generally you can find it/them in /etc/logstash/conf.d; it depends on your settings in logstash.yml that is in /etc/logstash/logstash.yml.
+For example, if you want to import data from your table in the database, you should have a configuration file, and we name it logstash-example.conf, open and append lines like below:
+input { stdin { } jdbc { jdbc_connection_string => &#34;jdbc:mysql://host:port/database&#34; jdbc_user => &#34;username&#34; jdbc_password => &#34;password&#34; jdbc_driver_library => &#34;/opt/drivers/mysql-connector-java-5."><meta property="og:title" content="Logstash Jdbc Input Plugin Import Big Result Set to Elasticsearch"><meta property="og:description" content="Editing your logstash configuration file, and generally you can find it/them in /etc/logstash/conf.d; it depends on your settings in logstash.yml that is in /etc/logstash/logstash.yml.
+For example, if you want to import data from your table in the database, you should have a configuration file, and we name it logstash-example.conf, open and append lines like below:
+input { stdin { } jdbc { jdbc_connection_string => &#34;jdbc:mysql://host:port/database&#34; jdbc_user => &#34;username&#34; jdbc_password => &#34;password&#34; jdbc_driver_library => &#34;/opt/drivers/mysql-connector-java-5."><meta property="og:type" content="article"><meta property="og:url" content="https://miguoliang.github.io/posts/logstash-jdbc-input-plugin-import-big-result-set-to-elasticsearch/"><meta property="article:section" content="posts"><meta property="article:published_time" content="2022-03-26T12:49:33+08:00"><meta property="article:modified_time" content="2022-03-26T12:49:33+08:00"><title>Logstash Jdbc Input Plugin Import Big Result Set to Elasticsearch · Mi's Blog</title><link rel=canonical href=https://miguoliang.github.io/posts/logstash-jdbc-input-plugin-import-big-result-set-to-elasticsearch/><link rel=preload href="/fonts/forkawesome-webfont.woff2?v=1.2.0" as=font type=font/woff2 crossorigin><link rel=stylesheet href=/css/coder.min.d9fddbffe6f27e69985dc5fe0471cdb0e57fbf4775714bc3d847accb08f4a1f6.css integrity="sha256-2f3b/+byfmmYXcX+BHHNsOV/v0d1cUvD2Eesywj0ofY=" crossorigin=anonymous media=screen><link rel=icon type=image/png href=/images/favicon-32x32.png sizes=32x32><link rel=icon type=image/png href=/images/favicon-16x16.png sizes=16x16><link rel=apple-touch-icon href=/images/apple-touch-icon.png><link rel=apple-touch-icon sizes=180x180 href=/images/apple-touch-icon.png><meta name=generator content="Hugo 0.95.0"><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8962113707459496" crossorigin=anonymous></script></head><body class="preload-transitions colorscheme-light"><div class=float-container><a id=dark-mode-toggle class=colorscheme-toggle><i class="fa fa-adjust fa-fw" aria-hidden=true></i></a></div><main class=wrapper><nav class=navigation><section class=container><a class=navigation-title href=/>Mi's Blog</a>
+<input type=checkbox id=menu-toggle>
+<label class="menu-button float-right" for=menu-toggle><i class="fa fa-bars fa-fw" aria-hidden=true></i></label><ul class=navigation-list><li class=navigation-item><a class=navigation-link href=/posts/>Blog</a></li><li class=navigation-item><a class=navigation-link href=/zen_quant/>Zen Quant</a></li><li class=navigation-item><a class=navigation-link href=/contact/>Contact me</a></li></ul></section></nav><div class=content><section class="container post"><article><header><div class=post-title><h1 class=title><a class=title-link href=https://miguoliang.github.io/posts/logstash-jdbc-input-plugin-import-big-result-set-to-elasticsearch/>Logstash Jdbc Input Plugin Import Big Result Set to Elasticsearch</a></h1></div><div class=post-meta><div class=date><span class=posted-on><i class="fa fa-calendar" aria-hidden=true></i>
+<time datetime=2022-03-26T12:49:33+08:00>March 26, 2022</time></span>
+<span class=reading-time><i class="fa fa-clock-o" aria-hidden=true></i>
+One-minute read</span></div></div></header><div><p>Editing your logstash configuration file, and generally you can find it/them in <code>/etc/logstash/conf.d</code>; it depends on your settings in <code>logstash.yml</code> that is in <code>/etc/logstash/logstash.yml</code>.</p><p>For example, if you want to import data from your table in the database, you should have a configuration file, and we name it <code>logstash-example.conf</code>, open and append lines like below:</p><pre tabindex=0><code class=language-conf data-lang=conf>input {
+    stdin {
+    }
+    jdbc {
+      jdbc_connection_string =&gt; &#34;jdbc:mysql://host:port/database&#34;
+      jdbc_user =&gt; &#34;username&#34;
+      jdbc_password =&gt; &#34;password&#34;
+      jdbc_driver_library =&gt; &#34;/opt/drivers/mysql-connector-java-5.1.46/mysql-connector-java-5.1.46-bin.jar&#34;
+      jdbc_driver_class =&gt; &#34;com.mysql.jdbc.Driver&#34;
+      statement =&gt; &#34;select *, (select destoctof_des from mall_product_destoctof where destoctof_product_id = product_id) as destoctof_des from mall_product where product_updated_time &gt; :sql_last_value&#34;
+      use_column_value =&gt; true
+      tracking_column =&gt; &#34;product_updated_time&#34;
+      schedule =&gt; &#34;* * * * *&#34;
+      jdbc_paging_enabled =&gt; true
+      jdbc_page_size =&gt; 500
+      jdbc_fetch_size =&gt; 500
+      clean_run =&gt; false
+      jdbc_default_timezone =&gt; &#34;Asia/Shanghai&#34;
+    }
+}
+
+output {
+  stdout {
+    codec =&gt; json_lines
+  }
+  elasticsearch {
+    hosts =&gt; [&#34;localhost:9200&#34;]
+    index =&gt; &#34;index_name&#34;
+    document_type =&gt; &#34;type_name&#34;
+    document_id =&gt; &#34;%{product_id}&#34;
+  }
+}
+</code></pre><blockquote><p><strong>NOTATION</strong></p></blockquote><ol><li><code>clean_run</code> must be <code>false</code> for pagination support</li><li><code>jdbc_paging_enabled</code> must be <code>true</code></li><li><code>jdbc_page_size</code> and <code>jdbc_fetch_size</code> are better to be set both, and not be very large if there is some big field in the result set.</li></ol></div><footer></footer></article></section></div><footer class=footer><section class=container>©
+2022
+Mi Guoliang
+·
+Powered by <a href=https://gohugo.io/>Hugo</a> & <a href=https://github.com/luizdepra/hugo-coder/>Coder</a>.</section></footer></main><script src=/js/coder.min.8fb86376a16e684af472a329aef502dbebcfab65ce264e9750d144912947c602.js integrity="sha256-j7hjdqFuaEr0cqMprvUC2+vPq2XOJk6XUNFEkSlHxgI="></script></body></html>

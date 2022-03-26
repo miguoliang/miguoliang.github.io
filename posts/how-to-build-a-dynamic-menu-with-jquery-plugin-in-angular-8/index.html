@@ -1,0 +1,176 @@
+<!doctype html><html lang=en><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=color-scheme content="light dark"><meta name=author content="Mi Guoliang"><meta name=description content="Introduction    Sometimes we need to display different menus to different users, for example, a staff can not see the menu item named Staff management in his dashboard, but his boss can see it.
+We can find many jQuery plugins to create beautiful and powerful menu, but how to make them working in Angular as well? Angular does not recommend people control DOM directly, because mannual DOM control will make Angular confused so that the website works in exception."><meta name=keywords content="blog,developer,personal,quantitative trading"><meta name=twitter:card content="summary"><meta name=twitter:title content="How to build a dynamic menu with jQuery plugin in Angular 8"><meta name=twitter:description content="Introduction    Sometimes we need to display different menus to different users, for example, a staff can not see the menu item named Staff management in his dashboard, but his boss can see it.
+We can find many jQuery plugins to create beautiful and powerful menu, but how to make them working in Angular as well? Angular does not recommend people control DOM directly, because mannual DOM control will make Angular confused so that the website works in exception."><meta property="og:title" content="How to build a dynamic menu with jQuery plugin in Angular 8"><meta property="og:description" content="Introduction    Sometimes we need to display different menus to different users, for example, a staff can not see the menu item named Staff management in his dashboard, but his boss can see it.
+We can find many jQuery plugins to create beautiful and powerful menu, but how to make them working in Angular as well? Angular does not recommend people control DOM directly, because mannual DOM control will make Angular confused so that the website works in exception."><meta property="og:type" content="article"><meta property="og:url" content="https://miguoliang.github.io/posts/how-to-build-a-dynamic-menu-with-jquery-plugin-in-angular-8/"><meta property="article:section" content="posts"><meta property="article:published_time" content="2022-03-26T13:51:17+08:00"><meta property="article:modified_time" content="2022-03-26T13:51:17+08:00"><title>How to build a dynamic menu with jQuery plugin in Angular 8 · Mi's Blog</title><link rel=canonical href=https://miguoliang.github.io/posts/how-to-build-a-dynamic-menu-with-jquery-plugin-in-angular-8/><link rel=preload href="/fonts/forkawesome-webfont.woff2?v=1.2.0" as=font type=font/woff2 crossorigin><link rel=stylesheet href=/css/coder.min.d9fddbffe6f27e69985dc5fe0471cdb0e57fbf4775714bc3d847accb08f4a1f6.css integrity="sha256-2f3b/+byfmmYXcX+BHHNsOV/v0d1cUvD2Eesywj0ofY=" crossorigin=anonymous media=screen><link rel=icon type=image/png href=/images/favicon-32x32.png sizes=32x32><link rel=icon type=image/png href=/images/favicon-16x16.png sizes=16x16><link rel=apple-touch-icon href=/images/apple-touch-icon.png><link rel=apple-touch-icon sizes=180x180 href=/images/apple-touch-icon.png><meta name=generator content="Hugo 0.95.0"><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8962113707459496" crossorigin=anonymous></script></head><body class="preload-transitions colorscheme-light"><div class=float-container><a id=dark-mode-toggle class=colorscheme-toggle><i class="fa fa-adjust fa-fw" aria-hidden=true></i></a></div><main class=wrapper><nav class=navigation><section class=container><a class=navigation-title href=/>Mi's Blog</a>
+<input type=checkbox id=menu-toggle>
+<label class="menu-button float-right" for=menu-toggle><i class="fa fa-bars fa-fw" aria-hidden=true></i></label><ul class=navigation-list><li class=navigation-item><a class=navigation-link href=/posts/>Blog</a></li><li class=navigation-item><a class=navigation-link href=/zen_quant/>Zen Quant</a></li><li class=navigation-item><a class=navigation-link href=/contact/>Contact me</a></li></ul></section></nav><div class=content><section class="container post"><article><header><div class=post-title><h1 class=title><a class=title-link href=https://miguoliang.github.io/posts/how-to-build-a-dynamic-menu-with-jquery-plugin-in-angular-8/>How to build a dynamic menu with jQuery plugin in Angular 8</a></h1></div><div class=post-meta><div class=date><span class=posted-on><i class="fa fa-calendar" aria-hidden=true></i>
+<time datetime=2022-03-26T13:51:17+08:00>March 26, 2022</time></span>
+<span class=reading-time><i class="fa fa-clock-o" aria-hidden=true></i>
+4-minute read</span></div></div></header><div><h2 id=introduction>Introduction
+<a class=heading-link href=#introduction><i class="fa fa-link" aria-hidden=true></i></a></h2><p>Sometimes we need to display different menus to different users, for example, a staff can not see the menu item named <em>Staff management</em> in his dashboard, but his boss can see it.</p><p>We can find many jQuery plugins to create beautiful and powerful menu, but how to make them working in Angular as well? Angular does not recommend people control DOM directly, because mannual DOM control will make Angular confused so that the website works in exception.</p><p>However, we know that jQuery plugins control DOM directly, and many good jQuery plugins can speed up our development, so how to integrate jQuery plugins with Angular correctly and smoothly? This article tells you how to do that!</p><p>In this article, you will learn how to build a dynamic menu with jQuery plugin in Angular 8. I use <em>metisMenu</em> as the jQuery plugin to build menu.</p><h2 id=1-create-a-new-angular-project>1. Create a new Angular project
+<a class=heading-link href=#1-create-a-new-angular-project><i class="fa fa-link" aria-hidden=true></i></a></h2><p>Run command <code>ng new dynamic-menu</code> in your prompt.</p><h2 id=2-install-metismenu>2. Install metisMenu
+<a class=heading-link href=#2-install-metismenu><i class="fa fa-link" aria-hidden=true></i></a></h2><p>Enter your project folder by command <code>cd dynamic-menu</code> and run command <code>npm install --save metismenu</code>.</p><h2 id=3-import-metismenu-to-our-angular-project>3. Import <em>metisMenu</em> to our Angular project
+<a class=heading-link href=#3-import-metismenu-to-our-angular-project><i class="fa fa-link" aria-hidden=true></i></a></h2><p>Open <em>angular.json</em> file.</p><p>Add <em>jQuery</em> and <em>metisMenu</em> scripts in the path <code>projects.dynamic-menu.architect.build.scripts</code>:</p><ul><li><em>node_modules/metismenu/dist/metisMenu.min.js</em></li><li><em>node_modules/jquery/dist/jquery.slim.min.js</em></li></ul><p>Add <em>metisMenu</em> styles in the path <code>projects.dynamic-menu.architect.build.styles</code>:</p><ul><li><em>node_modules/metismenu/dist/metisMenu.min.css</em></li></ul><h2 id=5-create-a-menu-component>5. Create a menu component
+<a class=heading-link href=#5-create-a-menu-component><i class="fa fa-link" aria-hidden=true></i></a></h2><ol><li><p>Run command <code>ng generate component menu-side --skipTests=true --inlineStyle=true --inlineTemplate=true --flat=true</code> in your prompt.</p></li><li><p>Paste the following code into the <em>menu-side.component.ts</em>.</p></li></ol><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=display:flex><span><span style=color:#66d9ef>import</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>Component</span>,
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>AfterContentInit</span>,
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>ViewChild</span>,
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>ElementRef</span>,
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>TemplateRef</span>,
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>HostBinding</span>
+</span></span><span style=display:flex><span>} <span style=color:#66d9ef>from</span> <span style=color:#e6db74>&#39;@angular/core&#39;</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>declare</span> <span style=color:#66d9ef>const</span> <span style=color:#a6e22e>$</span>: <span style=color:#66d9ef>any</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>@Component</span>({
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>selector</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#39;app-menu-side&#39;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>template</span><span style=color:#f92672>:</span> <span style=color:#e6db74>`
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        &lt;ul class=&#34;metismenu&#34; #el&gt;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>            &lt;ng-content&gt;&lt;/ng-content&gt;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        &lt;/ul&gt;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    `</span>,
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>styles</span><span style=color:#f92672>:</span> [<span style=color:#e6db74>&#39;&#39;</span>]
+</span></span><span style=display:flex><span>})
+</span></span><span style=display:flex><span><span style=color:#66d9ef>export</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>MenuSideComponent</span> <span style=color:#66d9ef>implements</span> <span style=color:#a6e22e>AfterContentInit</span> {
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>@HostBinding</span>(<span style=color:#e6db74>&#39;class&#39;</span>) <span style=color:#a6e22e>classes</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>&#39;sidebar-nav&#39;</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>@ViewChild</span>(<span style=color:#e6db74>&#39;el&#39;</span>, { <span style=color:#66d9ef>static</span><span style=color:#f92672>:</span> <span style=color:#66d9ef>true</span>, <span style=color:#a6e22e>read</span>: <span style=color:#66d9ef>ElementRef</span> }) <span style=color:#a6e22e>el</span>: <span style=color:#66d9ef>ElementRef</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>constructor</span>() { }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>ngAfterContentInit() {</span>
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>$</span>(<span style=color:#66d9ef>this</span>.<span style=color:#a6e22e>el</span>.<span style=color:#a6e22e>nativeElement</span>).<span style=color:#a6e22e>metisMenu</span>();
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h2 id=6-use-menusidecomponent-in-appcomponent>6. Use MenuSideComponent in AppComponent
+<a class=heading-link href=#6-use-menusidecomponent-in-appcomponent><i class="fa fa-link" aria-hidden=true></i></a></h2><ol><li><p>Paste the following code into <em>app.component.ts</em>.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=display:flex><span><span style=color:#66d9ef>import</span> { <span style=color:#a6e22e>Component</span>, <span style=color:#a6e22e>OnInit</span> } <span style=color:#66d9ef>from</span> <span style=color:#e6db74>&#39;@angular/core&#39;</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>@Component</span>({
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>selector</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#39;app-root&#39;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>templateUrl</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#39;./app.component.html&#39;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>styleUrls</span><span style=color:#f92672>:</span> [<span style=color:#e6db74>&#39;./app.component.css&#39;</span>]
+</span></span><span style=display:flex><span>})
+</span></span><span style=display:flex><span><span style=color:#66d9ef>export</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>AppComponent</span> <span style=color:#66d9ef>implements</span> <span style=color:#a6e22e>OnInit</span> {
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>menuData</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>ngOnInit() {</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>setTimeout</span>(() <span style=color:#f92672>=&gt;</span> <span style=color:#66d9ef>this</span>.<span style=color:#a6e22e>menuData</span> <span style=color:#f92672>=</span> [
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#a6e22e>text</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#39;Dashboard&#39;</span>, <span style=color:#a6e22e>children</span><span style=color:#f92672>:</span> [
+</span></span><span style=display:flex><span>            { <span style=color:#a6e22e>text</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#39;Dashboard v1&#39;</span> },
+</span></span><span style=display:flex><span>            { <span style=color:#a6e22e>text</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#39;Dashboard v2&#39;</span> }
+</span></span><span style=display:flex><span>            ]
+</span></span><span style=display:flex><span>        },
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#a6e22e>text</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#39;Products&#39;</span>, <span style=color:#a6e22e>children</span><span style=color:#f92672>:</span> [
+</span></span><span style=display:flex><span>            { <span style=color:#a6e22e>text</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#39;Product v1&#39;</span> },
+</span></span><span style=display:flex><span>            { <span style=color:#a6e22e>text</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#39;Product v2&#39;</span> },
+</span></span><span style=display:flex><span>            ]
+</span></span><span style=display:flex><span>        },
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#a6e22e>text</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#39;Orders&#39;</span>
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>        ], <span style=color:#ae81ff>5000</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div></li><li><p>Paste the following code into <em>app.component.html</em>.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-html data-lang=html><span style=display:flex><span>&lt;<span style=color:#f92672>app-menu-side</span> <span style=color:#960050;background-color:#1e0010>*</span><span style=color:#a6e22e>ngIf</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;menuData&#34;</span>&gt;
+</span></span><span style=display:flex><span>&lt;<span style=color:#f92672>li</span> <span style=color:#960050;background-color:#1e0010>*</span><span style=color:#a6e22e>ngFor</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;let item of menuData; let idx = index&#34;</span> <span style=color:#960050;background-color:#1e0010>[</span><span style=color:#a6e22e>class</span><span style=color:#960050;background-color:#1e0010>.</span><span style=color:#a6e22e>mm-active</span><span style=color:#960050;background-color:#1e0010>]=&#34;</span><span style=color:#a6e22e>idx </span><span style=color:#f92672>=</span><span style=color:#e6db74>==</span> <span style=color:#a6e22e>0</span><span style=color:#960050;background-color:#1e0010>&#34;</span>&gt;
+</span></span><span style=display:flex><span>    &lt;<span style=color:#f92672>a</span> <span style=color:#a6e22e>href</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;#&#34;</span> <span style=color:#960050;background-color:#1e0010>[</span><span style=color:#a6e22e>class</span><span style=color:#960050;background-color:#1e0010>.</span><span style=color:#a6e22e>has-arrow</span><span style=color:#960050;background-color:#1e0010>]=&#34;</span><span style=color:#a6e22e>item</span><span style=color:#960050;background-color:#1e0010>?.</span><span style=color:#a6e22e>children</span><span style=color:#960050;background-color:#1e0010>&#34;</span> <span style=color:#960050;background-color:#1e0010>[</span><span style=color:#a6e22e>attr</span><span style=color:#960050;background-color:#1e0010>.</span><span style=color:#a6e22e>aria-expanded</span><span style=color:#960050;background-color:#1e0010>]=&#34;!!</span><span style=color:#a6e22e>item</span><span style=color:#960050;background-color:#1e0010>?.</span><span style=color:#a6e22e>children</span><span style=color:#960050;background-color:#1e0010>&#34;</span>&gt;
+</span></span><span style=display:flex><span>    {{ item?.text }}
+</span></span><span style=display:flex><span>    &lt;/<span style=color:#f92672>a</span>&gt;
+</span></span><span style=display:flex><span>    &lt;<span style=color:#f92672>ul</span> <span style=color:#a6e22e>class</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;nav nav-second-level collapse&#34;</span> <span style=color:#960050;background-color:#1e0010>*</span><span style=color:#a6e22e>ngIf</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;item?.children&#34;</span>&gt;
+</span></span><span style=display:flex><span>    &lt;<span style=color:#f92672>li</span> <span style=color:#960050;background-color:#1e0010>*</span><span style=color:#a6e22e>ngFor</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;let subItem of item?.children&#34;</span>&gt;
+</span></span><span style=display:flex><span>        &lt;<span style=color:#f92672>a</span> <span style=color:#a6e22e>href</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;#&#34;</span>&gt;
+</span></span><span style=display:flex><span>        &lt;<span style=color:#f92672>span</span> <span style=color:#a6e22e>class</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;nav-label&#34;</span>&gt;{{ subItem?.text }}&lt;/<span style=color:#f92672>span</span>&gt;
+</span></span><span style=display:flex><span>        &lt;/<span style=color:#f92672>a</span>&gt;
+</span></span><span style=display:flex><span>    &lt;/<span style=color:#f92672>li</span>&gt;
+</span></span><span style=display:flex><span>    &lt;/<span style=color:#f92672>ul</span>&gt;
+</span></span><span style=display:flex><span>&lt;/<span style=color:#f92672>li</span>&gt;
+</span></span><span style=display:flex><span>&lt;/<span style=color:#f92672>app-menu-side</span>&gt;
+</span></span><span style=display:flex><span>&lt;<span style=color:#f92672>router-outlet</span>&gt;&lt;/<span style=color:#f92672>router-outlet</span>&gt;
+</span></span></code></pre></div></li></ol><h2 id=7-beautify-the-menu>7. Beautify the menu
+<a class=heading-link href=#7-beautify-the-menu><i class="fa fa-link" aria-hidden=true></i></a></h2><p>Paste the following code into <em>style.css</em>.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-css data-lang=css><span style=display:flex><span><span style=color:#75715e>/* You can add global styles to this file, and also import other style files */</span>
+</span></span><span style=display:flex><span>.<span style=color:#a6e22e>sidebar-nav</span> {
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>background</span>: <span style=color:#ae81ff>#212529</span>;
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>.<span style=color:#a6e22e>sidebar-nav</span> <span style=color:#f92672>ul</span> {
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>padding</span>: <span style=color:#ae81ff>0</span>;
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>margin</span>: <span style=color:#ae81ff>0</span>;
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>list-style</span>: <span style=color:#66d9ef>none</span>;
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>background</span>: <span style=color:#ae81ff>#343a40</span>;
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>.<span style=color:#a6e22e>sidebar-nav</span> .<span style=color:#a6e22e>metismenu</span> {
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>background</span>: <span style=color:#ae81ff>#212529</span>;
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>display</span>: <span style=color:#66d9ef>-webkit-</span>box;
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>display</span>: <span style=color:#66d9ef>-ms-</span>flexbox;
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>display</span>: <span style=color:#66d9ef>flex</span>;
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>-webkit-</span>box-orient: <span style=color:#66d9ef>vertical</span>;
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>-webkit-</span>box-direction: <span style=color:#66d9ef>normal</span>;
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>-ms-</span><span style=color:#66d9ef>flex-direction</span>: <span style=color:#66d9ef>column</span>;
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>flex-direction</span>: <span style=color:#66d9ef>column</span>;
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>.<span style=color:#a6e22e>sidebar-nav</span> .<span style=color:#a6e22e>metismenu</span> <span style=color:#f92672>li</span> <span style=color:#f92672>+</span> <span style=color:#f92672>li</span> {
+</span></span><span style=display:flex><span><span style=color:#66d9ef>margin-top</span>: <span style=color:#ae81ff>5</span><span style=color:#66d9ef>px</span>;
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>.<span style=color:#a6e22e>sidebar-nav</span> .<span style=color:#a6e22e>metismenu</span> <span style=color:#f92672>li</span>:<span style=color:#a6e22e>first-child</span> {
+</span></span><span style=display:flex><span><span style=color:#66d9ef>margin-top</span>: <span style=color:#ae81ff>5</span><span style=color:#66d9ef>px</span>;
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>.<span style=color:#a6e22e>sidebar-nav</span> .<span style=color:#a6e22e>metismenu</span> <span style=color:#f92672>li</span>:<span style=color:#a6e22e>last-child</span> {
+</span></span><span style=display:flex><span><span style=color:#66d9ef>margin-bottom</span>: <span style=color:#ae81ff>5</span><span style=color:#66d9ef>px</span>;
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>.<span style=color:#a6e22e>sidebar-nav</span> .<span style=color:#a6e22e>metismenu</span> <span style=color:#f92672>&gt;</span> <span style=color:#f92672>li</span> {
+</span></span><span style=display:flex><span>  <span style=color:#75715e>/*-webkit-box-flex: 1;
+</span></span></span><span style=display:flex><span><span style=color:#75715e>  -ms-flex: 1 1 0%;
+</span></span></span><span style=display:flex><span><span style=color:#75715e>  flex: 1 1 0%;*/</span>
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>display</span>: <span style=color:#66d9ef>-webkit-</span>box;
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>display</span>: <span style=color:#66d9ef>-ms-</span>flexbox;
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>display</span>: <span style=color:#66d9ef>flex</span>;
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>-webkit-</span>box-orient: <span style=color:#66d9ef>vertical</span>;
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>-webkit-</span>box-direction: <span style=color:#66d9ef>normal</span>;
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>-ms-</span><span style=color:#66d9ef>flex-direction</span>: <span style=color:#66d9ef>column</span>;
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>flex-direction</span>: <span style=color:#66d9ef>column</span>;
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>position</span>: <span style=color:#66d9ef>relative</span>;
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>.<span style=color:#a6e22e>sidebar-nav</span> .<span style=color:#a6e22e>metismenu</span> <span style=color:#f92672>a</span> {
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>position</span>: <span style=color:#66d9ef>relative</span>;
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>display</span>: <span style=color:#66d9ef>block</span>;
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>padding</span>: <span style=color:#ae81ff>13</span><span style=color:#66d9ef>px</span> <span style=color:#ae81ff>15</span><span style=color:#66d9ef>px</span>;
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>color</span>: <span style=color:#ae81ff>#adb5bd</span>;
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>outline-width</span>: <span style=color:#ae81ff>0</span>;
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>transition</span>: <span style=color:#66d9ef>all</span> <span style=color:#ae81ff>.3</span><span style=color:#66d9ef>s</span> <span style=color:#66d9ef>ease-out</span>;
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>.<span style=color:#a6e22e>sidebar-nav</span> .<span style=color:#a6e22e>metismenu</span> <span style=color:#f92672>ul</span> <span style=color:#f92672>a</span> {
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>padding</span>: <span style=color:#ae81ff>10</span><span style=color:#66d9ef>px</span> <span style=color:#ae81ff>15</span><span style=color:#66d9ef>px</span> <span style=color:#ae81ff>10</span><span style=color:#66d9ef>px</span> <span style=color:#ae81ff>30</span><span style=color:#66d9ef>px</span>;
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>.<span style=color:#a6e22e>sidebar-nav</span> .<span style=color:#a6e22e>metismenu</span> <span style=color:#f92672>ul</span> <span style=color:#f92672>ul</span> <span style=color:#f92672>a</span> {
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>padding</span>: <span style=color:#ae81ff>10</span><span style=color:#66d9ef>px</span> <span style=color:#ae81ff>15</span><span style=color:#66d9ef>px</span> <span style=color:#ae81ff>10</span><span style=color:#66d9ef>px</span> <span style=color:#ae81ff>45</span><span style=color:#66d9ef>px</span>;
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>.<span style=color:#a6e22e>sidebar-nav</span> .<span style=color:#a6e22e>metismenu</span> <span style=color:#f92672>a</span>:<span style=color:#a6e22e>hover</span><span style=color:#f92672>,</span>
+</span></span><span style=display:flex><span>.<span style=color:#a6e22e>sidebar-nav</span> .<span style=color:#a6e22e>metismenu</span> <span style=color:#f92672>a</span>:<span style=color:#a6e22e>focus</span><span style=color:#f92672>,</span>
+</span></span><span style=display:flex><span>.<span style=color:#a6e22e>sidebar-nav</span> .<span style=color:#a6e22e>metismenu</span> <span style=color:#f92672>a</span>:<span style=color:#a6e22e>active</span><span style=color:#f92672>,</span>
+</span></span><span style=display:flex><span>.<span style=color:#a6e22e>sidebar-nav</span> .<span style=color:#a6e22e>metismenu</span> .<span style=color:#a6e22e>mm-active</span> <span style=color:#f92672>&gt;</span> <span style=color:#f92672>a</span> {
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>color</span>: <span style=color:#ae81ff>#f8f9fa</span>;
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>text-decoration</span>: <span style=color:#66d9ef>none</span>;
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>background</span>: <span style=color:#ae81ff>#0b7285</span>;
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h2 id=8-verify-the-menu-appearance>8. Verify the menu appearance
+<a class=heading-link href=#8-verify-the-menu-appearance><i class="fa fa-link" aria-hidden=true></i></a></h2><ol><li><p>Run command <code>ng serve</code> in your prompt.</p></li><li><p>Open <code>http://localhost:4200</code> in your browser, and you will see the menu after 5 seconds.</p></li></ol><p><img src=screenshot.gif alt=Screenshot></p><p><em>You can find <a href=https://github.com/miguoliang/metismenu-in-angular>the demo&rsquo;s source code</a> in my github.</em></p><h2 id=conclusion>Conclusion
+<a class=heading-link href=#conclusion><i class="fa fa-link" aria-hidden=true></i></a></h2><p>Millions of <em>jQuery</em> plugins can help us speed up our development with fancy user experience, but pure <em>jQuery</em> programming can not hold complex projects in the future, that&rsquo;s why Angular was born. So we have to pay attention to make them work together as well.</p><p>We can import jQuery plugins to an Angular project in many ways, and your choice should depend on the situation. The way mentioned in this article is only one of them.</p><p><em>Angular Lifecycle Hooks</em> is an important concept, everyone should compare all hooks with DOM event listeners, and find differences between them, in fact they are not one-to-one correspondence. <em>Angular Lifcycle Hooks</em> is designed specifically for modular programming, so it is more flexible, powerful, and complex than DOM event listeners.</p></div><footer></footer></article></section></div><footer class=footer><section class=container>©
+2022
+Mi Guoliang
+·
+Powered by <a href=https://gohugo.io/>Hugo</a> & <a href=https://github.com/luizdepra/hugo-coder/>Coder</a>.</section></footer></main><script src=/js/coder.min.8fb86376a16e684af472a329aef502dbebcfab65ce264e9750d144912947c602.js integrity="sha256-j7hjdqFuaEr0cqMprvUC2+vPq2XOJk6XUNFEkSlHxgI="></script></body></html>

@@ -1,0 +1,116 @@
+<!doctype html><html lang=en><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=color-scheme content="light dark"><meta name=author content="Mi Guoliang"><meta name=description content="This is a starter guide for Java developers to generate and read a unit test code coverage report with JaCoCo in Gradle. People will learn the entire development workflow that includes starting a new Java project with Gradle, writing a simple unit test, running unit tests, generating unit tests, and reading the code coverage report."><meta name=keywords content="blog,developer,personal,quantitative trading"><meta name=twitter:card content="summary_large_image"><meta name=twitter:image content="https://miguoliang.github.io/posts/generate-java-unit-test-code-coverage-report-with-jacoco-in-gradle/index-code-coverage-report.jpg"><meta name=twitter:title content="Generate Java Unit Test Code Coverage Report with JaCoCo in Gradle"><meta name=twitter:description content="This is a starter guide for Java developers to generate and read a unit test code coverage report with JaCoCo in Gradle. People will learn the entire development workflow that includes starting a new Java project with Gradle, writing a simple unit test, running unit tests, generating unit tests, and reading the code coverage report."><meta property="og:title" content="Generate Java Unit Test Code Coverage Report with JaCoCo in Gradle"><meta property="og:description" content="This is a starter guide for Java developers to generate and read a unit test code coverage report with JaCoCo in Gradle. People will learn the entire development workflow that includes starting a new Java project with Gradle, writing a simple unit test, running unit tests, generating unit tests, and reading the code coverage report."><meta property="og:type" content="article"><meta property="og:url" content="https://miguoliang.github.io/posts/generate-java-unit-test-code-coverage-report-with-jacoco-in-gradle/"><meta property="og:image" content="https://miguoliang.github.io/posts/generate-java-unit-test-code-coverage-report-with-jacoco-in-gradle/index-code-coverage-report.jpg"><meta property="article:section" content="posts"><meta property="article:published_time" content="2022-03-26T14:24:04+08:00"><meta property="article:modified_time" content="2022-03-26T14:24:04+08:00"><title>Generate Java Unit Test Code Coverage Report with JaCoCo in Gradle · Mi's Blog</title><link rel=canonical href=https://miguoliang.github.io/posts/generate-java-unit-test-code-coverage-report-with-jacoco-in-gradle/><link rel=preload href="/fonts/forkawesome-webfont.woff2?v=1.2.0" as=font type=font/woff2 crossorigin><link rel=stylesheet href=/css/coder.min.d9fddbffe6f27e69985dc5fe0471cdb0e57fbf4775714bc3d847accb08f4a1f6.css integrity="sha256-2f3b/+byfmmYXcX+BHHNsOV/v0d1cUvD2Eesywj0ofY=" crossorigin=anonymous media=screen><link rel=icon type=image/png href=/images/favicon-32x32.png sizes=32x32><link rel=icon type=image/png href=/images/favicon-16x16.png sizes=16x16><link rel=apple-touch-icon href=/images/apple-touch-icon.png><link rel=apple-touch-icon sizes=180x180 href=/images/apple-touch-icon.png><meta name=generator content="Hugo 0.95.0"><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8962113707459496" crossorigin=anonymous></script></head><body class="preload-transitions colorscheme-light"><div class=float-container><a id=dark-mode-toggle class=colorscheme-toggle><i class="fa fa-adjust fa-fw" aria-hidden=true></i></a></div><main class=wrapper><nav class=navigation><section class=container><a class=navigation-title href=/>Mi's Blog</a>
+<input type=checkbox id=menu-toggle>
+<label class="menu-button float-right" for=menu-toggle><i class="fa fa-bars fa-fw" aria-hidden=true></i></label><ul class=navigation-list><li class=navigation-item><a class=navigation-link href=/posts/>Blog</a></li><li class=navigation-item><a class=navigation-link href=/zen_quant/>Zen Quant</a></li><li class=navigation-item><a class=navigation-link href=/contact/>Contact me</a></li></ul></section></nav><div class=content><section class="container post"><article><header><div class=post-title><h1 class=title><a class=title-link href=https://miguoliang.github.io/posts/generate-java-unit-test-code-coverage-report-with-jacoco-in-gradle/>Generate Java Unit Test Code Coverage Report with JaCoCo in Gradle</a></h1></div><div class=post-meta><div class=date><span class=posted-on><i class="fa fa-calendar" aria-hidden=true></i>
+<time datetime=2022-03-26T14:24:04+08:00>March 26, 2022</time></span>
+<span class=reading-time><i class="fa fa-clock-o" aria-hidden=true></i>
+4-minute read</span></div></div></header><div><h2 id=introduction>Introduction
+<a class=heading-link href=#introduction><i class="fa fa-link" aria-hidden=true></i></a></h2><p>Code Coverage Report is critical for Java developers to measure their unit test work. Otherwise, developers know nothing about how many logic branches and codes are tested and how many not. Developers can found missing codes easily in a code coverage report, and a code coverage report can be a clue to help them improves their unit test work.</p><p>This article is a guide to help Java developers generate and read a code coverage report from zero. And I will use Visual Studio Code (VSCode) as the development tool, and you can use your favorite IDE or editors.</p><h2 id=install-gradle>Install Gradle
+<a class=heading-link href=#install-gradle><i class="fa fa-link" aria-hidden=true></i></a></h2><p><a href=https://docs.gradle.org/current/userguide/userguide.html>Gradle</a> is an open-source build automation tool focused on flexibility and performance. Gradle can be a alternative to <a href=https://maven.apache.org/>Maven</a>.</p><p>If you are working on macOS, you must know about a famous package management tool named <a href=https://brew.sh/>Homebrew</a>, but the version of Gradle is old in Homebrew repository. Therefore, I use <a href=https://sdkman.io/>SDKMAN</a> to install Gradle globally.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>sdk install gradle
+</span></span></code></pre></div><p><strong>Note:</strong> The latest Gradle version is 6.2.2 now.</p><p>Otherwise, you can learn other installation ways in <a href=https://docs.gradle.org/current/userguide/installation.html>Gradle Installation Guide</a>.</p><h2 id=create-an-empty-java-project>Create an empty Java Project
+<a class=heading-link href=#create-an-empty-java-project><i class="fa fa-link" aria-hidden=true></i></a></h2><p>Firstly, make an empty folder named <em>gradle-jacoco</em> and we will work in it.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>mkdir gradle-jacoco
+</span></span><span style=display:flex><span>cd gradle-jacoco
+</span></span></code></pre></div><p>Secondly, run Gradle setup command.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>$ gradle init
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>Select type of project to generate:
+</span></span><span style=display:flex><span>  1: basic
+</span></span><span style=display:flex><span>  2: application
+</span></span><span style=display:flex><span>  3: library
+</span></span><span style=display:flex><span>  4: Gradle plugin
+</span></span><span style=display:flex><span>Enter selection <span style=color:#f92672>(</span>default: basic<span style=color:#f92672>)</span> <span style=color:#f92672>[</span>1..4<span style=color:#f92672>]</span> <span style=color:#ae81ff>2</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>Select implementation language:
+</span></span><span style=display:flex><span>  1: C++
+</span></span><span style=display:flex><span>  2: Groovy
+</span></span><span style=display:flex><span>  3: Java
+</span></span><span style=display:flex><span>  4: Kotlin
+</span></span><span style=display:flex><span>  5: Swift
+</span></span><span style=display:flex><span>Enter selection <span style=color:#f92672>(</span>default: Java<span style=color:#f92672>)</span> <span style=color:#f92672>[</span>1..5<span style=color:#f92672>]</span> <span style=color:#ae81ff>3</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>Select build script DSL:
+</span></span><span style=display:flex><span>  1: Groovy
+</span></span><span style=display:flex><span>  2: Kotlin
+</span></span><span style=display:flex><span>Enter selection <span style=color:#f92672>(</span>default: Groovy<span style=color:#f92672>)</span> <span style=color:#f92672>[</span>1..2<span style=color:#f92672>]</span> <span style=color:#ae81ff>1</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>Select test framework:
+</span></span><span style=display:flex><span>  1: JUnit <span style=color:#ae81ff>4</span>
+</span></span><span style=display:flex><span>  2: TestNG
+</span></span><span style=display:flex><span>  3: Spock
+</span></span><span style=display:flex><span>  4: JUnit Jupiter
+</span></span><span style=display:flex><span>Enter selection <span style=color:#f92672>(</span>default: JUnit 4<span style=color:#f92672>)</span> <span style=color:#f92672>[</span>1..4<span style=color:#f92672>]</span> <span style=color:#ae81ff>4</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>Project name <span style=color:#f92672>(</span>default: gradle-jacoco<span style=color:#f92672>)</span>:
+</span></span><span style=display:flex><span>Source package <span style=color:#f92672>(</span>default: gradle.jacoco<span style=color:#f92672>)</span>:
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>&gt; Task :init
+</span></span><span style=display:flex><span>Get more help with your project: https://docs.gradle.org/5.6.2/userguide/tutorial_java_projects.html
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>BUILD SUCCESSFUL in 27s
+</span></span><span style=display:flex><span><span style=color:#ae81ff>2</span> actionable tasks: <span style=color:#ae81ff>2</span> executed
+</span></span></code></pre></div><p><strong>Note:</strong> We use <a href=https://junit.org/junit5/docs/current/user-guide/>JUnit Jupiter (JUnit 5)</a> in this guide.</p><p>Finally, a simple Java application project is generated.</p><p><img src=directory-structure.jpg alt="Directory Structure"></p><h2 id=setup-jacoco>Setup JaCoCo
+<a class=heading-link href=#setup-jacoco><i class="fa fa-link" aria-hidden=true></i></a></h2><p>Open <em>build.gradle</em>, and append <code>id jacoco</code> into the <em>plugin</em> block.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-groovy data-lang=groovy><span style=display:flex><span>plugins <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Apply the java plugin to add support for Java
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    id <span style=color:#e6db74>&#39;java&#39;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Apply the application plugin to add support for building a CLI application.
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    id <span style=color:#e6db74>&#39;application&#39;</span>
+</span></span><span style=display:flex><span>    id <span style=color:#e6db74>&#39;jacoco&#39;</span> <span style=color:#75715e>// HERE!
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#f92672>}</span>
+</span></span></code></pre></div><h2 id=write-a-simple-function-to-be-tested-later>Write a Simple Function to be Tested Later
+<a class=heading-link href=#write-a-simple-function-to-be-tested-later><i class="fa fa-link" aria-hidden=true></i></a></h2><p>Open and edit <em>App.java</em>.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span><span style=color:#75715e>/*
+</span></span></span><span style=display:flex><span><span style=color:#75715e> * This Java source file was generated by the Gradle &#39;init&#39; task.
+</span></span></span><span style=display:flex><span><span style=color:#75715e> */</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>package</span> gradle.jacoco<span style=color:#f92672>;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>App</span> <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// To be tested!
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#66d9ef>public</span> String <span style=color:#a6e22e>getAnAnimal</span><span style=color:#f92672>(</span>String animal<span style=color:#f92672>)</span> <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> <span style=color:#f92672>(</span><span style=color:#e6db74>&#34;cat&#34;</span><span style=color:#f92672>.</span><span style=color:#a6e22e>equalsIgnoreCase</span><span style=color:#f92672>(</span>animal<span style=color:#f92672>))</span> <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> <span style=color:#e6db74>&#34;Garfield&#34;</span><span style=color:#f92672>;</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>}</span> <span style=color:#66d9ef>else</span> <span style=color:#66d9ef>if</span> <span style=color:#f92672>(</span><span style=color:#e6db74>&#34;dog&#34;</span><span style=color:#f92672>.</span><span style=color:#a6e22e>equalsIgnoreCase</span><span style=color:#f92672>(</span>animal<span style=color:#f92672>))</span> <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> <span style=color:#e6db74>&#34;Odie&#34;</span><span style=color:#f92672>;</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>}</span> <span style=color:#66d9ef>else</span> <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> <span style=color:#e6db74>&#34;Opps!&#34;</span><span style=color:#f92672>;</span>
+</span></span><span style=display:flex><span>        <span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> String <span style=color:#a6e22e>getGreeting</span><span style=color:#f92672>()</span> <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> <span style=color:#e6db74>&#34;Hello world.&#34;</span><span style=color:#f92672>;</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>void</span> <span style=color:#a6e22e>main</span><span style=color:#f92672>(</span>String<span style=color:#f92672>[]</span> args<span style=color:#f92672>)</span> <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>        System<span style=color:#f92672>.</span><span style=color:#a6e22e>out</span><span style=color:#f92672>.</span><span style=color:#a6e22e>println</span><span style=color:#f92672>(</span><span style=color:#66d9ef>new</span> App<span style=color:#f92672>().</span><span style=color:#a6e22e>getGreeting</span><span style=color:#f92672>());</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>}</span>
+</span></span></code></pre></div><h2 id=write-a-unit-test-method>Write a Unit Test Method
+<a class=heading-link href=#write-a-unit-test-method><i class="fa fa-link" aria-hidden=true></i></a></h2><p>Open and edit <em>AppTest.java</em></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span><span style=color:#75715e>/*
+</span></span></span><span style=display:flex><span><span style=color:#75715e> * This Java source file was generated by the Gradle &#39;init&#39; task.
+</span></span></span><span style=display:flex><span><span style=color:#75715e> */</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>package</span> gradle.jacoco<span style=color:#f92672>;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> org.junit.jupiter.api.Test<span style=color:#f92672>;</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>import static</span> org.junit.jupiter.api.Assertions.*<span style=color:#f92672>;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>AppTest</span> <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Our test here!
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#a6e22e>@Test</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>void</span> <span style=color:#a6e22e>testGetAnAnimal</span><span style=color:#f92672>()</span> <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>        assertEquals<span style=color:#f92672>(</span><span style=color:#e6db74>&#34;Garfield&#34;</span><span style=color:#f92672>,</span> <span style=color:#66d9ef>new</span> App<span style=color:#f92672>().</span><span style=color:#a6e22e>getAnAnimal</span><span style=color:#f92672>(</span><span style=color:#e6db74>&#34;cat&#34;</span><span style=color:#f92672>));</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>@Test</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>void</span> <span style=color:#a6e22e>appHasAGreeting</span><span style=color:#f92672>()</span> <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>        App classUnderTest <span style=color:#f92672>=</span> <span style=color:#66d9ef>new</span> App<span style=color:#f92672>();</span>
+</span></span><span style=display:flex><span>        assertNotNull<span style=color:#f92672>(</span>classUnderTest<span style=color:#f92672>.</span><span style=color:#a6e22e>getGreeting</span><span style=color:#f92672>(),</span> <span style=color:#e6db74>&#34;app should have a greeting&#34;</span><span style=color:#f92672>);</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>}</span>
+</span></span></code></pre></div><h2 id=run-and-generate-code-coverage-report>Run and Generate Code Coverage Report
+<a class=heading-link href=#run-and-generate-code-coverage-report><i class="fa fa-link" aria-hidden=true></i></a></h2><p>Use the following command to clean the previous build result, run unit tests, and generate a code coverage report.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>./gradlew clean test jacocoTestReport
+</span></span></code></pre></div><p>The final code coverage report is saved in <em>build/reports/jacoco/test/html</em>. Developers can open <em>index.html</em> to open the report in a browser.</p><p><img src=index-code-coverage-report.jpg alt="Index of Code Coverage Report"></p><p>Besides, developers can locate to uncovered lines in a specific file easily.</p><p><img src=uncovered-lines.jpg alt="Uncovered Lines"></p><p><strong>Note:</strong> The Code Coverage Report is generated when all unit tests pass, in another words, you can not find the code coverage report if any unit test fails.</p><h2 id=conclusion>Conclusion
+<a class=heading-link href=#conclusion><i class="fa fa-link" aria-hidden=true></i></a></h2><p>Developers should know how to measure their work, including progress, quality, and efficent. The code coverage report is useful, because it can make developers&rsquo; review more effecient and effective. Therefore, developers can control their code completely with a code coverage report. However, 100% code coverage is ideal, especially it is impossible when you use some third-party library in your project, so that developers do not to be demanding.</p></div><footer></footer></article></section></div><footer class=footer><section class=container>©
+2022
+Mi Guoliang
+·
+Powered by <a href=https://gohugo.io/>Hugo</a> & <a href=https://github.com/luizdepra/hugo-coder/>Coder</a>.</section></footer></main><script src=/js/coder.min.8fb86376a16e684af472a329aef502dbebcfab65ce264e9750d144912947c602.js integrity="sha256-j7hjdqFuaEr0cqMprvUC2+vPq2XOJk6XUNFEkSlHxgI="></script></body></html>
