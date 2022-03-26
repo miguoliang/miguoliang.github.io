@@ -8,6 +8,9 @@ author = "Mi Guoliang"
 keywords = "blog,developer,personal,quantitative trading"
 description = "Mi Guoliang's personal website"
 
+[params.googleTagManager]
+id = "308454388"
+
 [[languages.en.menu.main]]
 name = "Blog"
 weight = 2
