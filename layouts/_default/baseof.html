@@ -10,9 +10,11 @@
     {{ partial "csp.html" . }}
     {{ end }}
 
-    {{ with .Site.Params.author }}<meta name="author" content="{{ . }}">{{ end }}
+    {{ with .Site.Params.author }}
+    <meta name="author" content="{{ . }}">
+    {{ end }}
     <meta name="description" content="{{ .Description | default (.Summary | default .Site.Params.description ) }}">
-    <meta name="keywords" content="{{ (delimit .Keywords ",") | default .Site.Params.keywords }}">
+    <meta name="keywords" content="{{ (delimit .Keywords " ,") | default .Site.Params.keywords }}">
 
     {{ template "_internal/twitter_cards.html" . }}
     {{ template "_internal/opengraph.html" . }}
@@ -31,31 +33,39 @@
     <link rel="stylesheet" href="{{ $styles.RelPermalink }}" media="screen">
     {{ else }}
     {{ $cssOpts := (dict "targetPath" "css/coder.css" ) }}
-    {{ $styles := resources.Get "scss/coder.scss" | resources.ExecuteAsTemplate "style.coder.css" . | toCSS $cssOpts | minify | fingerprint }}
-    <link rel="stylesheet" href="{{ $styles.RelPermalink }}" integrity="{{ $styles.Data.Integrity }}" crossorigin="anonymous" media="screen" />
+    {{ $styles := resources.Get "scss/coder.scss" | resources.ExecuteAsTemplate "style.coder.css" . | toCSS $cssOpts |
+    minify | fingerprint }}
+    <link rel="stylesheet" href="{{ $styles.RelPermalink }}" integrity="{{ $styles.Data.Integrity }}"
+          crossorigin="anonymous" media="screen"/>
     {{ end }}
 
     {{ if .Site.Params.rtl }}
     {{ if .Site.IsServer }}
     {{ $cssOpts := (dict "targetPath" "css/coder-rtl.css" "enableSourceMap" true ) }}
-    {{ $styles := resources.Get "scss/coder-rtl.scss" | resources.ExecuteAsTemplate "style.coder-rtl.css" . | toCSS $cssOpts }}
+    {{ $styles := resources.Get "scss/coder-rtl.scss" | resources.ExecuteAsTemplate "style.coder-rtl.css" . | toCSS
+    $cssOpts }}
     <link rel="stylesheet" href="{{ $styles.RelPermalink }}" media="screen">
     {{ else }}
     {{ $cssOpts := (dict "targetPath" "css/coder-rtl.css" ) }}
-    {{ $styles := resources.Get "scss/coder-rtl.scss" | resources.ExecuteAsTemplate "style.coder-rtl.css" . | toCSS $cssOpts | minify | fingerprint }}
-    <link rel="stylesheet" href="{{ $styles.RelPermalink }}" integrity="{{ $styles.Data.Integrity }}" crossorigin="anonymous" media="screen" />
+    {{ $styles := resources.Get "scss/coder-rtl.scss" | resources.ExecuteAsTemplate "style.coder-rtl.css" . | toCSS
+    $cssOpts | minify | fingerprint }}
+    <link rel="stylesheet" href="{{ $styles.RelPermalink }}" integrity="{{ $styles.Data.Integrity }}"
+          crossorigin="anonymous" media="screen"/>
     {{ end }}
     {{ end }}
 
-    {{ if  or (eq .Site.Params.colorScheme "auto") (eq .Site.Params.colorScheme "dark") }}
+    {{ if or (eq .Site.Params.colorScheme "auto") (eq .Site.Params.colorScheme "dark") }}
     {{ if .Site.IsServer }}
     {{ $cssOpts := (dict "targetPath" "css/coder-dark.css" "enableSourceMap" true ) }}
-    {{ $styles := resources.Get "scss/coder-dark.scss" | resources.ExecuteAsTemplate "style.coder-dark.css" . | toCSS $cssOpts }}
+    {{ $styles := resources.Get "scss/coder-dark.scss" | resources.ExecuteAsTemplate "style.coder-dark.css" . | toCSS
+    $cssOpts }}
     <link rel="stylesheet" href="{{ $styles.RelPermalink }}" media="screen">
     {{ else }}
     {{ $cssOpts := (dict "targetPath" "css/coder-dark.css" ) }}
-    {{ $styles := resources.Get "scss/coder-dark.scss" | resources.ExecuteAsTemplate "style.coder-dark.css" . | toCSS $cssOpts | minify | fingerprint }}
-    <link rel="stylesheet" href="{{ $styles.RelPermalink }}" integrity="{{ $styles.Data.Integrity }}" crossorigin="anonymous" media="screen" />
+    {{ $styles := resources.Get "scss/coder-dark.scss" | resources.ExecuteAsTemplate "style.coder-dark.css" . | toCSS
+    $cssOpts | minify | fingerprint }}
+    <link rel="stylesheet" href="{{ $styles.RelPermalink }}" integrity="{{ $styles.Data.Integrity }}"
+          crossorigin="anonymous" media="screen"/>
     {{ end }}
     {{ end }}
 
@@ -65,7 +75,8 @@
     <link rel="stylesheet" href="{{ $styles.RelPermalink }}" media="screen">
     {{ else }}
     {{ $styles := resources.Get . | minify | fingerprint }}
-    <link rel="stylesheet" href="{{ $styles.RelPermalink }}" integrity="{{ $styles.Data.Integrity }}" crossorigin="anonymous" media="screen" />
+    <link rel="stylesheet" href="{{ $styles.RelPermalink }}" integrity="{{ $styles.Data.Integrity }}"
+          crossorigin="anonymous" media="screen"/>
     {{ end }}
     {{ end }}
 
@@ -77,18 +88,21 @@
     <link rel="stylesheet" href="{{ $styles.RelPermalink }}" media="screen">
     {{ else }}
     {{ $styles := resources.Get . | toCSS | minify | fingerprint }}
-    <link rel="stylesheet" href="{{ $styles.RelPermalink }}" integrity="{{ $styles.Data.Integrity }}" crossorigin="anonymous" media="screen" />
+    <link rel="stylesheet" href="{{ $styles.RelPermalink }}" integrity="{{ $styles.Data.Integrity }}"
+          crossorigin="anonymous" media="screen"/>
     {{ end }}
     {{ end }}
 
-    <link rel="icon" type="image/png" href="{{ .Site.Params.favicon_32 | default "/images/favicon-32x32.png" | relURL }}" sizes="32x32">
-    <link rel="icon" type="image/png" href="{{ .Site.Params.favicon_16 | default "/images/favicon-16x16.png" | relURL }}" sizes="16x16">
+    <link rel="icon" type="image/png" href="{{ .Site.Params.favicon_32 | default " /images/favicon-32x32.png" | relURL }}" sizes="32x32">
+    <link rel="icon" type="image/png" href="{{ .Site.Params.favicon_16 | default " /images/favicon-16x16.png" | relURL }}" sizes="16x16">
 
-    <link rel="apple-touch-icon" href="{{ .Site.Params.touchicon | default "/images/apple-touch-icon.png" | relURL }}">
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ .Site.Params.touchicon | default "/images/apple-touch-icon.png" | relURL }}">
+    <link rel="apple-touch-icon" href="{{ .Site.Params.touchicon | default " /images/apple-touch-icon.png" | relURL }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ .Site.Params.touchicon | default " /images/apple-touch-icon.png" | relURL }}">
 
     {{ range .AlternativeOutputFormats -}}
-    {{ printf `<link rel="%s" type="%s" href="%s" title="%s" />` .Rel .MediaType.Type .RelPermalink $.Site.Title | safeHTML }}
+    {{ printf `
+    <link rel="%s" type="%s" href="%s" title="%s"/>
+    ` .Rel .MediaType.Type .RelPermalink $.Site.Title | safeHTML }}
     {{ end -}}
 
     {{ hugo.Generator }}
@@ -174,6 +188,7 @@
     const downBorderColor = '#008F28';
     // Each item: open，close，lowest，highest
     const data0 = splitData(data);
+
     function splitData(rawData) {
         const categoryData = [];
         const values = [];
@@ -186,21 +201,7 @@
             values: values
         };
     }
-    function calculateMA(dayCount) {
-        var result = [];
-        for (var i = 0, len = data0.values.length; i < len; i++) {
-            if (i < dayCount) {
-                result.push('-');
-                continue;
-            }
-            var sum = 0;
-            for (var j = 0; j < dayCount; j++) {
-                sum += +data0.values[i - j][1];
-            }
-            result.push(sum / dayCount);
-        }
-        return result;
-    }
+
     option = {
         title: {
             text: '上证指数',
@@ -213,42 +214,62 @@
             }
         },
         legend: {
-            data: ['日K', 'MA5', 'MA10', 'MA20', 'MA30']
+            data: ['日K', 'MA5', 'MA10']
         },
-        grid: {
-            left: '10%',
-            right: '10%',
-            bottom: '15%'
-        },
-        xAxis: {
+        grid: [{
+            left: '3%',
+            right: '1%',
+            height: '60%'
+        },{
+            left: '3%',
+            right: '1%',
+            top: '71%',
+            height: '10%'
+        },{
+            left: '3%',
+            right: '1%',
+            top: '82%',
+            height: '14%'
+        }],
+        xAxis: [{
             type: 'category',
             data: data0.categoryData,
             boundaryGap: false,
-            axisLine: { onZero: false },
-            splitLine: { show: false },
+            axisLine: {onZero: false},
+            splitLine: {show: false},
             min: 'dataMin',
             max: 'dataMax'
-        },
-        yAxis: {
+        },{
+            type: 'category',
+            gridIndex: 1,
+            data: data0.categoryData,
+            axisLabel: {show: false}
+        },{
+            type: 'category',
+            gridIndex: 2,
+            data: data0.categoryData,
+            axisLabel: {show: false}
+        }],
+        yAxis: [{
             scale: true,
             splitArea: {
                 show: true
             }
-        },
-        dataZoom: [
-            {
-                type: 'inside',
-                start: 50,
-                end: 100
-            },
-            {
-                show: true,
-                type: 'slider',
-                top: '90%',
-                start: 50,
-                end: 100
-            }
-        ],
+        },{
+            gridIndex: 1,
+            splitNumber: 3,
+            axisLine: {onZero: false},
+            axisTick: {show: false},
+            splitLine: {show: false},
+            axisLabel: {show: true}
+        },{
+            gridIndex: 2,
+            splitNumber: 4,
+            axisLine: {onZero: false},
+            axisTick: {show: false},
+            splitLine: {show: false},
+            axisLabel: {show: true}
+        }],
         series: [
             {
                 name: '日K',
@@ -259,126 +280,65 @@
                     color0: downColor,
                     borderColor: upBorderColor,
                     borderColor0: downBorderColor
-                },
-                markPoint: {
-                    label: {
-                        formatter: function (param) {
-                            return param != null ? Math.round(param.value) + '' : '';
-                        }
-                    },
-                    data: [
-                        {
-                            name: 'Mark',
-                            coord: ['2013/5/31', 2300],
-                            value: 2300,
-                            itemStyle: {
-                                color: 'rgb(41,60,85)'
+                }
+            },
+            {
+                name: '笔',
+                type: 'line',
+                data: a,
+                connectNulls: true,
+                showSymbol: false
+            },
+            {
+                name: '成交量',
+                type: 'bar',
+                xAxisIndex: 1,
+                yAxisIndex: 1,
+                data: v,
+                itemStyle: {
+                    normal: {
+                        color: function(params) {
+                            var colorList;
+                            if (data0.values[params.dataIndex][1]>data0.values[params.dataIndex][0]) {
+                                colorList = upColor;
+                            } else {
+                                colorList = downColor;
                             }
+                            return colorList;
                         },
-                        {
-                            name: 'highest value',
-                            type: 'max',
-                            valueDim: 'highest'
-                        },
-                        {
-                            name: 'lowest value',
-                            type: 'min',
-                            valueDim: 'lowest'
-                        },
-                        {
-                            name: 'average value on close',
-                            type: 'average',
-                            valueDim: 'close'
-                        }
-                    ],
-                    tooltip: {
-                        formatter: function (param) {
-                            return param.name + '<br>' + (param.data.coord || '');
-                        }
                     }
-                },
-                markLine: {
-                    symbol: ['none', 'none'],
-                    data: [
-                        [
-                            {
-                                name: 'from lowest to highest',
-                                type: 'min',
-                                valueDim: 'lowest',
-                                symbol: 'circle',
-                                symbolSize: 10,
-                                label: {
-                                    show: false
-                                },
-                                emphasis: {
-                                    label: {
-                                        show: false
-                                    }
-                                }
-                            },
-                            {
-                                type: 'max',
-                                valueDim: 'highest',
-                                symbol: 'circle',
-                                symbolSize: 10,
-                                label: {
-                                    show: false
-                                },
-                                emphasis: {
-                                    label: {
-                                        show: false
-                                    }
-                                }
+                }
+            },{
+                name: 'MACD',
+                type: 'bar',
+                xAxisIndex: 2,
+                yAxisIndex: 2,
+                data: histogram,
+                itemStyle: {
+                    normal: {
+                        color: function(params) {
+                            var colorList;
+                            if (params.data >= 0) {
+                                colorList = upColor;
+                            } else {
+                                colorList = downColor;
                             }
-                        ],
-                        {
-                            name: 'min line on close',
-                            type: 'min',
-                            valueDim: 'close'
+                            return colorList;
                         },
-                        {
-                            name: 'max line on close',
-                            type: 'max',
-                            valueDim: 'close'
-                        }
-                    ]
+                    }
                 }
-            },
-            {
-                name: 'MA5',
+            },{
+                name: 'DIF',
                 type: 'line',
-                data: calculateMA(5),
-                smooth: true,
-                lineStyle: {
-                    opacity: 0.5
-                }
-            },
-            {
-                name: 'MA10',
+                xAxisIndex: 2,
+                yAxisIndex: 2,
+                data: fast
+            },{
+                name: 'DEA',
                 type: 'line',
-                data: calculateMA(10),
-                smooth: true,
-                lineStyle: {
-                    opacity: 0.5
-                }
-            },
-            {
-                name: 'MA20',
-                type: 'line',
-                data: calculateMA(20),
-                smooth: true,
-                lineStyle: {
-                    opacity: 0.5
-                }
-            },
-            {
-                name: 'MA30',
-                type: 'line',
-                data: calculateMA(30),
-                smooth: true,
-                lineStyle: {
-                    opacity: 0.5
-                }
+                xAxisIndex: 2,
+                yAxisIndex: 2,
+                data: slow
             }
         ]
     };
