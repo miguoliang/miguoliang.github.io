@@ -22,6 +22,11 @@ weight = 3
 url = "zen_quant/"
 
 [[languages.en.menu.main]]
+name = "产品净值"
+weight = 4
+url = "net_value/"
+
+[[languages.en.menu.main]]
 name = "Contact me"
 weight = 5
 url = "contact/"
