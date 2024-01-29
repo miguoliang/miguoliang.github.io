@@ -1,32 +1,12 @@
 baseURL = 'https://miguoliang.com/'
 languageCode = 'en-us'
 title = "Mi's Blog"
-theme = 'hugo-coder'
+theme = 'nostyleplease'
 
 [params]
 author = "Mi Guoliang"
-keywords = "blog,developer,personal,quantitative trading"
+keywords = "chinese,male,son,husband,father,coder,manager"
 description = "Mi Guoliang's personal website"
 
 [params.googleTagManager]
 id = "G-3XTC5Q3D4Y"
-
-[[languages.en.menu.main]]
-name = "Blog"
-weight = 2
-url = "posts/"
-
-[[languages.en.menu.main]]
-name = "Zen Quant"
-weight = 3
-url = "zen_quant/"
-
-[[languages.en.menu.main]]
-name = "产品净值"
-weight = 4
-url = "net_value/"
-
-[[languages.en.menu.main]]
-name = "Contact me"
-weight = 5
-url = "contact/"
