@@ -1,0 +1,13 @@
+baseURL = "https://miguoliang.github.io/"
+languageCode = "en-us"
+theme = "anubis2"
+title = "A Silent Coder"
+
+[author]
+name = "Mi Guoliang"
+
+[markup.goldmark.renderer]
+unsafe = true # true | false; Enable unsafe mode to have a better experience
+
+[markup.highlight]
+style = 'base16-snazzy' # Highlight.js style
