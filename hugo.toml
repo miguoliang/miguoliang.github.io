@@ -6,6 +6,12 @@ title = "A Silent Coder"
 [author]
 name = "Mi Guoliang"
 
+[params]
+# check more social icons at https://github.com/Junyi-99/hugo-theme-anubis2/wiki/Social-Icons
+social = [
+    { id="github", name="miguoliang" },
+]
+
 [markup.goldmark.renderer]
 unsafe = true # true | false; Enable unsafe mode to have a better experience
 
