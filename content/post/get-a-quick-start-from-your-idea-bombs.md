@@ -11,9 +11,5 @@ A collection of the commands to launch a project, no matter the tech stack, for 
 ## Chrome Extension
 
 ```shell
-npm install --global yo gulp-cli bower
-npm i -g generator-chrome-extension
-mkdir project-root-dir
-cd project-root-dir
-yo chrome-extension
+npx plasmo init <project_name>
 ```
