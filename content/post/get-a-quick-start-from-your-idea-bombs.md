@@ -13,3 +13,9 @@ A collection of the commands to launch a project, no matter the tech stack, for 
 ```shell
 npx plasmo init <project_name>
 ```
+
+## Web SPA
+
+```shell
+pnpm create vite
+```
