@@ -26,3 +26,9 @@ yo code
 ```shell
 cargo generate --git https://github.com/miguoliang/actix-web-project-template.git --name your-project-name
 ```
+
+## Data Generator
+
+```shell
+cargo generate --git https://github.com/miguoliang/fake-data-generator-template.git --name your-project-name
+```
