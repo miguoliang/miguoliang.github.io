@@ -22,6 +22,7 @@ This section contains a list of resources that can be useful for learning more a
 - [Yarn](https://yarnpkg.com/): A package manager that aims to be fast, reliable, and secure when installing dependencies.
 - [pnpm](https://pnpm.io/): A package manager that installs dependencies in a way that saves disk space and speeds up the installation process.
 - [Rust](https://www.rust-lang.org/): A systems programming language that focuses on safety, speed, and concurrency.
+- [The Rustonomicon](https://doc.rust-lang.org/nomicon/): The unofficial guide to all the dark corners of the Rust programming language.
 - [Actix Web](https://actix.rs/): A powerful, pragmatic, and extremely fast web framework for Rust.
 - [Diesel](https://diesel.rs/): A safe, extensible ORM and query builder for Rust that supports PostgreSQL, MySQL, and SQLite.
 - [SQLx](https://sqlx.dev/): An asynchronous, pure Rust SQL toolkit that supports PostgreSQL, MySQL, and SQLite.
