@@ -25,6 +25,7 @@ This section contains a list of resources that can be useful for learning more a
 - [Actix Web](https://actix.rs/): A powerful, pragmatic, and extremely fast web framework for Rust.
 - [Diesel](https://diesel.rs/): A safe, extensible ORM and query builder for Rust that supports PostgreSQL, MySQL, and SQLite.
 - [SQLx](https://sqlx.dev/): An asynchronous, pure Rust SQL toolkit that supports PostgreSQL, MySQL, and SQLite.
+- [Blessed.rs](https://blessed.rs/crates): A guide to the Rust ecosystem for choosing the right crates for your projects.
 
 ## Style Guides and Conventions
 
