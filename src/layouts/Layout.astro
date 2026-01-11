@@ -1,5 +1,18 @@
 ---
-const { toc = [] } = Astro.props;
+import { SEO } from 'astro-seo';
+
+type TocItem = { text: string; slug: string };
+const { toc = [] as TocItem[], title, description, image, pubDate, updatedDate, author } = Astro.props;
+
+// 判断是否为首页
+const isHomePage = Astro.url.pathname === '/';
+
+// 默认 SEO 配置
+const seoTitle = title || (isHomePage ? 'Guoliang Mi' : 'Guoliang Mi | Blog');
+const seoDescription = description || (isHomePage ? 'Where AI meets human potential.' : '');
+const canonical = Astro.url.href;
+const siteUrl = Astro.site || new URL(Astro.url.pathname, Astro.url.origin).origin;
+const ogImage = image || `${siteUrl}/og-image.png`;
 ---
 <!doctype html>
 <html lang="en">
@@ -8,7 +21,29 @@ const { toc = [] } = Astro.props;
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
+		<SEO
+			title={seoTitle}
+			description={seoDescription}
+			canonical={canonical}
+			openGraph={{
+				basic: {
+					title: seoTitle,
+					type: isHomePage ? 'website' : 'article',
+					image: ogImage,
+					url: canonical,
+				},
+				optional: {
+					siteName: 'Guoliang Mi',
+				},
+				...(pubDate && {
+					article: {
+						publishedTime: pubDate.toISOString(),
+						...(updatedDate && { modifiedTime: updatedDate.toISOString() }),
+						...(author && { authors: [author] }),
+					},
+				}),
+			}}
+		/>
 	</head>
 	<body>
 		<div class="container">

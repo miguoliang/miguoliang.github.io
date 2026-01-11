@@ -22,7 +22,15 @@ const toc = headings
 	}));
 ---
 
-<Layout toc={toc}>
+<Layout 
+	toc={toc}
+	title={post.data.title}
+	description={post.data.description}
+	image={post.data.image}
+	pubDate={post.data.pubDate}
+	updatedDate={post.data.updatedDate}
+	author={post.data.author}
+>
 	<article>
 		<header>
 			<time>
