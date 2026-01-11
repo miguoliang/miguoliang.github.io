@@ -7,9 +7,12 @@ const { toc = [] as TocItem[], title, description, image, pubDate, updatedDate, 
 // 判断是否为首页
 const isHomePage = Astro.url.pathname === '/';
 
+// 默认简介描述
+const profileDescription = "System Architect and Tech Leader in SBL software systems. Exploring AI-driven R&D processes and management transformation. I believe AI amplifies human potential—transforming our role from executors to AI collaboration experts.";
+
 // 默认 SEO 配置
-const seoTitle = title || (isHomePage ? 'Guoliang Mi' : 'Guoliang Mi | Blog');
-const seoDescription = description || (isHomePage ? 'Where AI meets human potential.' : '');
+const seoTitle = title || (isHomePage ? 'Guoliang Mi | System Architect - Exploring AI-Driven R&D Transformation' : 'Guoliang Mi | Blog');
+const seoDescription = description || (isHomePage ? profileDescription : '');
 const canonical = Astro.url.href;
 const siteUrl = Astro.site || new URL(Astro.url.pathname, Astro.url.origin).origin;
 const ogImage = image || `${siteUrl}/og-image.png`;
@@ -34,6 +37,7 @@ const ogImage = image || `${siteUrl}/og-image.png`;
 				},
 				optional: {
 					siteName: 'Guoliang Mi',
+					description: isHomePage ? profileDescription : seoDescription,
 				},
 				...(pubDate && {
 					article: {
@@ -57,7 +61,7 @@ const ogImage = image || `${siteUrl}/og-image.png`;
 						</div>
 						<div class="profile-info">
 							<h2>Guoliang Mi</h2>
-							<p class="profile-bio">Where AI meets human potential.</p>
+							<p class="profile-bio">{profileDescription}</p>
 						</div>
 					</div>
 				) : (

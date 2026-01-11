@@ -9,7 +9,7 @@ export async function GET(context) {
 
   return rss({
     title: 'Guoliang Mi | Blog',
-    description: 'Where AI meets human potential.',
+    description: "System Architect and Tech Leader in SBL software systems. Exploring AI-driven R&D processes and management transformation. I believe AI amplifies human potential—transforming our role from executors to AI collaboration experts.",
     site: context.site,
     items: sortedPosts.map((post) => ({
       title: post.data.title,
