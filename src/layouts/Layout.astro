@@ -1,3 +1,6 @@
+---
+const { toc = [] } = Astro.props;
+---
 <!doctype html>
 <html lang="en">
 	<head>
@@ -8,15 +11,113 @@
 		<title>Astro Basics</title>
 	</head>
 	<body>
-		<slot />
+		<div class="container">
+			<aside>
+				<div class="profile">
+					<!-- Add your profile content here -->
+				</div>
+				<div class="sidebar-nav">
+					<a href="/">← Back to Home</a>
+				</div>
+				{toc.length > 0 && (
+					<nav class="toc">
+						<h3>Contents</h3>
+						<ul>
+							{toc.map((heading) => (
+								<li>
+									<a href={`#${heading.slug}`}>{heading.text}</a>
+								</li>
+							))}
+						</ul>
+					</nav>
+				)}
+			</aside>
+			<main>
+				<slot />
+			</main>
+		</div>
 	</body>
 </html>
 
 <style>
-	html,
 	body {
 		margin: 0;
-		width: 100%;
-		height: 100%;
+		padding: 0;
+		overflow: hidden; /* Prevent body scrolling */
+	}
+	
+	.container {
+		display: flex;
+		min-height: 100vh;
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		overflow: hidden;
+	}
+	
+	aside {
+		width: 250px;
+		padding: 2rem;
+		border-right: 1px solid #e0e0e0;
+		display: flex;
+		flex-direction: column;
+		overflow: hidden;
+	}
+	
+	main {
+		flex: 1;
+		padding: 2rem;
+		overflow-y: auto;
+	}
+	
+	.sidebar-nav {
+		margin-top: 1rem;
+		margin-bottom: 1rem;
+	}
+	
+	.sidebar-nav a {
+		text-decoration: none;
+		color: #666;
+		font-size: 0.9rem;
+	}
+	
+	.sidebar-nav a:hover {
+		color: #000;
+	}
+	
+	.toc {
+		flex: 1;
+		overflow-y: auto;
+	}
+	
+	.toc h3 {
+		margin: 0 0 1rem 0;
+		font-size: 1rem;
+		position: sticky;
+		top: 0;
+		background: white;
+		padding-bottom: 0.5rem;
+	}
+	
+	.toc ul {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+	}
+	
+	.toc li {
+		margin-bottom: 0.5rem;
+	}
+	
+	.toc a {
+		text-decoration: none;
+		color: #666;
+		font-size: 0.9rem;
+	}
+	
+	.toc a:hover {
+		color: #000;
 	}
 </style>

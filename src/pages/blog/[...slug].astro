@@ -1,0 +1,38 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+
+export async function getStaticPaths() {
+	const blogPosts = await getCollection('blog');
+	return blogPosts.map((post) => ({
+		params: { slug: post.slug },
+		props: post,
+	}));
+}
+
+const post = Astro.props;
+const { Content, headings } = await post.render();
+
+// Extract headings for TOC
+const toc = headings
+	.filter((h) => h.depth === 2) // Only h2 headings
+	.map((h) => ({
+		text: h.text,
+		slug: h.slug,
+	}));
+---
+
+<Layout toc={toc}>
+	<article>
+		<header>
+			<time>
+				{post.data.pubDate.toLocaleDateString('en-US', {
+					year: 'numeric',
+					month: 'long',
+					day: 'numeric',
+				})}
+			</time>
+		</header>
+		<Content />
+	</article>
+</Layout>
