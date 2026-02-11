@@ -8,11 +8,21 @@ const { toc = [] as TocItem[], title, description, image, pubDate, updatedDate, 
 const isHomePage = Astro.url.pathname === '/';
 
 // 默认简介描述
-const profileDescription = 'Put on common scense cap to observe the world.';
+const profileDescription =
+	"Frank's Observation — concise personal takes on technology, AI, and product strategy. Put on your common sense hat.";
+const slogan = 'Put on your common sense hat.';
 
 // 默认 SEO 配置
-const seoTitle = title || (isHomePage ? 'Guoliang Mi | System Architect - Exploring AI-Driven R&D Transformation' : 'Guoliang Mi | Blog');
-const seoDescription = description || (isHomePage ? profileDescription : '');
+const seoTitle =
+	title ||
+	(isHomePage
+		? "Frank's Observation | Personal Perspectives on Technology"
+		: "Frank's Observation | Blog");
+const seoDescription =
+	description ||
+	(isHomePage
+		? profileDescription
+		: "Frank Mi documents independent observations about technology, AI, and product strategy.");
 const canonical = Astro.url.href;
 const siteUrl = Astro.site || new URL(Astro.url.pathname, Astro.url.origin).origin;
 const ogImage = image || new URL('/og-image.png', siteUrl).href;
@@ -20,6 +30,30 @@ const ogImage = image || new URL('/og-image.png', siteUrl).href;
 <!doctype html>
 <html lang="en">
 	<head>
+		<script is:inline>
+			// 在页面加载前立即设置主题，避免闪烁
+			(function() {
+				try {
+					const theme = localStorage.getItem('theme') || 
+						(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+					document.documentElement.setAttribute('data-theme', theme);
+				} catch (e) {
+					document.documentElement.setAttribute('data-theme', 'light');
+				}
+			})();
+		</script>
+		<style is:inline>
+			/* 防止主题切换时的闪烁 */
+			html:not([data-theme]) {
+				background-color: #fefefe;
+			}
+			html[data-theme="dark"] {
+				background-color: #0a0a0a;
+			}
+			html[data-theme="light"] {
+				background-color: #fefefe;
+			}
+		</style>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -36,7 +70,7 @@ const ogImage = image || new URL('/og-image.png', siteUrl).href;
 					url: canonical,
 				},
 				optional: {
-					siteName: 'Guoliang Mi',
+					siteName: "Frank's Observation",
 					description: isHomePage ? profileDescription : seoDescription,
 				},
 				...(pubDate && {
@@ -53,25 +87,96 @@ const ogImage = image || new URL('/og-image.png', siteUrl).href;
 <body>
 	<div class="page">
 		<nav class="top-nav">
-			<a class="brand" href="/">Frank Mi</a>
+			<div class="brand-area">
+				<a class="brand" href="/">Frank Mi</a>
+				<p class="brand-slogan">{slogan}</p>
+			</div>
 			<div class="nav-links">
 				<a href="/blog">Blog</a>
+				<button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode">
+					<svg class="sun-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+						<circle cx="12" cy="12" r="5"></circle>
+						<line x1="12" y1="1" x2="12" y2="3"></line>
+						<line x1="12" y1="21" x2="12" y2="23"></line>
+						<line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+						<line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+						<line x1="1" y1="12" x2="3" y2="12"></line>
+						<line x1="21" y1="12" x2="23" y2="12"></line>
+						<line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+						<line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+					</svg>
+					<svg class="moon-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+						<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+					</svg>
+				</button>
 			</div>
 		</nav>
 		<main>
-			<slot />
+			<div class="content">
+				<slot />
+			</div>
 		</main>
 	</div>
+	<script>
+		(function() {
+			const themeToggle = document.getElementById('theme-toggle');
+			const html = document.documentElement;
+			
+			function setTheme(theme) {
+				html.setAttribute('data-theme', theme);
+				localStorage.setItem('theme', theme);
+			}
+			
+			function getTheme() {
+				return html.getAttribute('data-theme') || 'light';
+			}
+			
+			themeToggle?.addEventListener('click', () => {
+				const currentTheme = getTheme();
+				const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+				setTheme(newTheme);
+			});
+		})();
+	</script>
 </body>
 </html>
 
 <style>
+	:root {
+		--bg-color: #fefefe;
+		--text-color: #111;
+		--text-secondary: #6c6c6c;
+		--text-muted: #8a8a8a;
+		--border-color: #eee;
+		--nav-bg: rgba(255, 255, 255, 0.9);
+		--nav-border: #eee;
+		--link-color: #555;
+		--link-hover: #000;
+	}
+	
+	[data-theme="dark"] {
+		--bg-color: #0a0a0a;
+		--text-color: #e5e5e5;
+		--text-secondary: #a0a0a0;
+		--text-muted: #888;
+		--border-color: #2a2a2a;
+		--nav-bg: rgba(10, 10, 10, 0.9);
+		--nav-border: #2a2a2a;
+		--link-color: #b0b0b0;
+		--link-hover: #fff;
+	}
+	
+	html {
+		background-color: var(--bg-color);
+	}
+	
 	body {
 		margin: 0;
 		padding: 0;
 		font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-		background: #fefefe;
-		color: #111;
+		background: var(--bg-color);
+		color: var(--text-color);
+		transition: background-color 0.3s ease, color 0.3s ease;
 	}
 	
 	.page {
@@ -85,12 +190,21 @@ const ogImage = image || new URL('/og-image.png', siteUrl).href;
 		align-items: center;
 		justify-content: space-between;
 		padding: 1.5rem 2rem;
-		border-bottom: 1px solid #eee;
-		background: rgba(255, 255, 255, 0.9);
+		width: 100%;
+		box-sizing: border-box;
+		border-bottom: 1px solid var(--nav-border);
+		background: var(--nav-bg);
 		backdrop-filter: blur(8px);
 		position: sticky;
 		top: 0;
 		z-index: 10;
+		transition: background-color 0.3s ease, border-color 0.3s ease;
+	}
+	
+	.brand-area {
+		display: flex;
+		flex-direction: column;
+		gap: 0.35rem;
 	}
 	
 	.brand {
@@ -102,39 +216,151 @@ const ogImage = image || new URL('/og-image.png', siteUrl).href;
 		text-transform: uppercase;
 	}
 	
+	.brand-slogan {
+		margin: 0;
+		font-size: 0.75rem;
+		letter-spacing: 0.15em;
+		text-transform: uppercase;
+		color: var(--text-secondary);
+	}
+	
+	.nav-links {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		margin-left: auto;
+		min-width: 80px;
+	}
+	
 	.nav-links a {
 		text-decoration: none;
-		color: #555;
+		color: var(--link-color);
 		font-size: 0.9rem;
 		margin-left: 1.5rem;
 		text-transform: uppercase;
 		letter-spacing: 0.08em;
+		transition: color 0.2s ease;
 	}
 	
 	.nav-links a:hover {
-		color: #000;
+		color: var(--link-hover);
+	}
+	
+	.theme-toggle {
+		background: none;
+		border: none;
+		cursor: pointer;
+		padding: 0.5rem;
+		margin-left: 1.5rem;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		color: var(--link-color);
+		transition: color 0.2s ease, transform 0.2s ease;
+		border-radius: 4px;
+	}
+	
+	.theme-toggle:hover {
+		color: var(--link-hover);
+		transform: scale(1.1);
+	}
+	
+	.theme-toggle:active {
+		transform: scale(0.95);
+	}
+	
+	.theme-toggle svg {
+		width: 18px;
+		height: 18px;
+	}
+	
+	[data-theme="dark"] .sun-icon {
+		display: none;
+	}
+	
+	[data-theme="light"] .moon-icon {
+		display: none;
+	}
+	
+	[data-theme="dark"] .moon-icon {
+		display: block;
+	}
+	
+	[data-theme="light"] .sun-icon {
+		display: block;
 	}
 	
 	main {
 		flex: 1;
-		padding: 2rem;
+		width: 100%;
+	}
+	
+	.content {
 		width: 100%;
 		max-width: 900px;
 		margin: 0 auto;
+		padding: 2rem;
 	}
 	
 	@media (max-width: 720px) {
 		.top-nav {
-			padding: 1rem;
+			padding: 1rem 1.25rem;
+			gap: 1rem;
+		}
+	
+		.brand {
+			font-size: 0.95rem;
+		}
+	
+		.brand-slogan {
+			font-size: 0.7rem;
+			letter-spacing: 0.12em;
+		}
+	
+		.nav-links {
+			margin-left: auto;
 		}
 	
 		.nav-links a {
 			margin-left: 1rem;
-			font-size: 0.8rem;
+			font-size: 0.85rem;
+			letter-spacing: 0.07em;
+		}
+		
+		.theme-toggle {
+			margin-left: 1rem;
 		}
 	
-		main {
+		.content {
 			padding: 1.5rem;
+		}
+	}
+	
+	@media (max-width: 520px) {
+		.top-nav {
+			padding: 0.9rem 1.1rem;
+		}
+	
+		.brand-slogan {
+			font-size: 0.65rem;
+		}
+	
+		.nav-links a {
+			margin-left: 0.5rem;
+			font-size: 0.8rem;
+		}
+		
+		.theme-toggle {
+			margin-left: 0.5rem;
+		}
+	
+		.nav-links {
+			min-width: auto;
+			margin-left: auto;
+		}
+	
+		.content {
+			padding: 1.25rem;
 		}
 	}
 </style>
