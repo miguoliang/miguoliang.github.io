@@ -1,0 +1,82 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+
+const allBlogPosts = await getCollection('blog');
+const sortedPosts = allBlogPosts.sort(
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+---
+
+<Layout title="Blog">
+	<section class="blog-list">
+		<h1>Blog</h1>
+		{sortedPosts.length > 0 ? (
+			<ul>
+				{sortedPosts.map((post) => (
+					<li>
+						<article>
+							<h2>
+								<a href={`/blog/${post.slug}`}>{post.data.title}</a>
+								<time>
+									{post.data.pubDate.toLocaleDateString('en-US', {
+										year: 'numeric',
+										month: 'short',
+										day: 'numeric',
+									})}
+								</time>
+							</h2>
+						</article>
+					</li>
+				))}
+			</ul>
+		) : (
+			<p>No blog posts yet. Add some in <code>src/content/blog/</code>!</p>
+		)}
+	</section>
+</Layout>
+
+<style>
+	.blog-list h1 {
+		margin-bottom: 2rem;
+		text-transform: uppercase;
+		letter-spacing: 0.2em;
+	}
+	
+	.blog-list ul {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 1.5rem;
+	}
+	
+	.blog-list h2 {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		gap: 2rem;
+		margin: 0;
+		line-height: 1.5;
+	}
+	
+	.blog-list h2 a {
+		text-decoration: none;
+		color: inherit;
+	}
+	
+	.blog-list h2 a:hover {
+		text-decoration: underline;
+	}
+	
+	.blog-list h2 time {
+		margin-left: auto;
+		font-weight: normal;
+		font-size: 0.85em;
+		color: #6f6f6f;
+		min-width: 170px;
+		text-align: right;
+		white-space: nowrap;
+	}
+</style>
