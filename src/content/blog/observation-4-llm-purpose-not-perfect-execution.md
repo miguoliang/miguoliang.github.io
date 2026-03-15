@@ -1,7 +1,7 @@
 ---
 title: 'Observation #4: LLMs Get Purpose, Not Perfect Execution—Architecture and Orchestration Are the Core Capability'
 description: 'A good general LLM finds the purpose of your prompt; detailed work needs skills and MCP. Good AI architecture and agent orchestration trade off speed, cost, and performance—that’s the edge for a company or team.'
-pubDate: 'Feb 11 2026'
+pubDate: 'Mar 15 2026'
 tags: ['AI', 'LLM', 'prompting', 'MCP', 'architecture', 'orchestration', 'observation']
 ---
 

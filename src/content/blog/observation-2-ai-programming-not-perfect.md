@@ -1,7 +1,7 @@
 ---
 title: 'Observation #2: AI Speeds Up Coding—But Delivering a Final Product Is Still Hard'
 description: 'AI assistants accelerate coding and documentation, yet they rarely make things perfect. Shipping a polished product still demands human judgment and iteration.'
-pubDate: 'Feb 11 2026'
+pubDate: 'Mar 11 2026'
 tags: ['AI', 'programming', 'product', 'observation']
 ---
 

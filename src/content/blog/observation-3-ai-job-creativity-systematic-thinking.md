@@ -1,7 +1,7 @@
 ---
 title: 'Observation #3: Don’t Worry About Losing Your Job to AI—Creativity and Systematic Thinking Are Your Edge'
 description: 'AI can automate tasks; it can’t replace the human edge. Creativity and systematic thinking are where you stay ahead.'
-pubDate: 'Feb 11 2026'
+pubDate: 'Mar 15 2026'
 tags: ['AI', 'career', 'creativity', 'observation']
 ---
 
