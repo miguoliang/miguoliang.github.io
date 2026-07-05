@@ -1,0 +1,66 @@
+---
+interface Props {
+	html: string;
+	pagefind?: boolean;
+}
+
+const { html, pagefind = false } = Astro.props;
+---
+
+<section class="clip-body" {...(pagefind && { 'data-pagefind-body': true })}>
+	<div class="prose" set:html={html} />
+</section>
+
+<style>
+	.clip-body {
+		flex: 1;
+		min-width: 0;
+		padding: var(--region-y) var(--region-x);
+	}
+
+	.prose {
+		font-size: clamp(0.92rem, 0.15vw + 0.88rem, 1rem);
+		line-height: 1.75;
+		color: var(--text-color);
+	}
+
+	.prose :global(h3) {
+		margin: 1.5rem 0 0.5rem;
+		font-size: 1rem;
+		font-weight: 600;
+		line-height: 1.4;
+	}
+
+	.prose :global(h3:first-child) {
+		margin-top: 0;
+	}
+
+	.prose :global(p) {
+		margin: 0 0 0.65rem;
+	}
+
+	.prose :global(p:last-child) {
+		margin-bottom: 0;
+	}
+
+	.prose :global(ol),
+	.prose :global(ul) {
+		margin: 0 0 0.65rem;
+		padding-left: 1.1rem;
+	}
+
+	.prose :global(li) {
+		margin-bottom: 0.25rem;
+	}
+
+	.prose :global(blockquote) {
+		margin: 0.5rem 0;
+		padding-left: 0.65rem;
+		border-left: 2px solid var(--border-color);
+		color: var(--text-secondary);
+	}
+
+	.prose :global(a) {
+		color: var(--link-color);
+	}
+</style>

@@ -4,7 +4,8 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "node scripts/check-clipping-links.mjs && astro build && pagefind --site dist",
+    "check:links": "node scripts/check-clipping-links.mjs",
     "preview": "astro preview",
     "astro": "astro"
   },
@@ -15,5 +16,8 @@
     "astro-mermaid": "^1.2.0",
     "astro-seo": "^0.8.4",
     "mermaid": "^11.12.2"
+  },
+  "devDependencies": {
+    "pagefind": "^1.5.2"
   }
 }

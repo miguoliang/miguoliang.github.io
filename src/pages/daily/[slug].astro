@@ -1,0 +1,57 @@
+---
+import { getClippingsByType, groupByEdition, formatEditionTitle } from '../../lib/clippings';
+import Layout from '../../layouts/Layout.astro';
+import ClippingCard from '../../components/ClippingCard.astro';
+
+export async function getStaticPaths() {
+	const clippings = await getClippingsByType('daily');
+	const editions = groupByEdition(clippings);
+
+	return editions.map((group) => ({
+		params: { slug: group.edition },
+		props: { group },
+	}));
+}
+
+const { group } = Astro.props;
+const title = formatEditionTitle(group.edition, 'daily');
+---
+
+<Layout title={title} description={`${title} — 精选 AI 资讯网摘。`} wide>
+	<header class="page-header" data-pagefind-body>
+		<h1>{title}</h1>
+		<p class="meta">{group.items.length} 篇 · <a href="/daily">全部日刊</a></p>
+	</header>
+
+	<div class="clip-list" data-pagefind-body>
+		{group.items.map((clip) => <ClippingCard clip={clip} />)}
+	</div>
+</Layout>
+
+<style>
+	.page-header {
+		margin: 0;
+	}
+
+	h1 {
+		margin: 0;
+		font-size: 1.1rem;
+		font-weight: 600;
+		line-height: 1.35;
+	}
+
+	.meta {
+		margin: 0.25rem 0 0;
+		font-size: 0.75rem;
+		color: var(--text-muted);
+	}
+
+	.meta a {
+		color: var(--text-secondary);
+		text-decoration: none;
+	}
+
+	.meta a:hover {
+		text-decoration: underline;
+	}
+</style>

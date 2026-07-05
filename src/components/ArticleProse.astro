@@ -1,0 +1,98 @@
+---
+interface Props {
+	pagefind?: boolean;
+}
+
+const { pagefind = false } = Astro.props;
+---
+
+<div class="article-prose" {...(pagefind && { 'data-pagefind-body': true })}>
+	<slot />
+</div>
+
+<style>
+	.article-prose {
+		font-size: 1.05rem;
+		line-height: 1.8;
+		letter-spacing: 0.01em;
+		color: var(--text-color);
+	}
+
+	.article-prose :global(h2),
+	.article-prose :global(h3) {
+		margin-top: 2.5rem;
+		margin-bottom: 1rem;
+		line-height: 1.4;
+	}
+
+	.article-prose :global(h2:first-child) {
+		margin-top: 0;
+	}
+
+	.article-prose :global(p) {
+		margin-top: 0;
+		margin-bottom: 1.25rem;
+	}
+
+	.article-prose :global(ol),
+	.article-prose :global(ul) {
+		padding-left: 1.2rem;
+		margin-bottom: 1.5rem;
+	}
+
+	.article-prose :global(li) {
+		margin-bottom: 0.5rem;
+	}
+
+	.article-prose :global(a) {
+		color: var(--link-color);
+		text-decoration: underline;
+	}
+
+	.article-prose :global(a:hover) {
+		color: var(--link-hover);
+	}
+
+	.article-prose :global(blockquote) {
+		margin: 1.5rem 0;
+		padding-left: 1rem;
+		border-left: 3px solid var(--border-color);
+		color: var(--text-secondary);
+	}
+
+	.article-prose :global(code) {
+		background: var(--border-color);
+		padding: 0.2em 0.4em;
+		border-radius: 3px;
+		font-size: 0.9em;
+	}
+
+	.article-prose :global(pre) {
+		background: var(--border-color);
+		padding: 1rem;
+		border-radius: 4px;
+		overflow-x: auto;
+	}
+
+	.article-prose :global(pre code) {
+		background: none;
+		padding: 0;
+	}
+
+	.article-prose :global(details) {
+		margin-top: 2rem;
+		border: 1px solid var(--border-color);
+		border-radius: 6px;
+		padding: 1rem 1.25rem;
+	}
+
+	.article-prose :global(summary) {
+		cursor: pointer;
+		font-weight: 600;
+		color: var(--text-secondary);
+	}
+
+	.article-prose :global(details[open] summary) {
+		margin-bottom: 1rem;
+	}
+</style>

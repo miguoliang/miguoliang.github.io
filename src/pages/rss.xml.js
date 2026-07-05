@@ -1,22 +1,20 @@
 import rss from '@astrojs/rss';
-import { getCollection } from 'astro:content';
+import { getAllClippings } from '../lib/clippings';
 
 export async function GET(context) {
-  const blog = await getCollection('blog');
-  const sortedPosts = blog.sort(
-    (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
-  );
+	const clippings = await getAllClippings();
 
-  return rss({
-    title: 'Guoliang Mi | Blog',
-    description: "System Architect and Tech Leader in SBL software systems. Exploring AI-driven R&D processes and management transformation. I believe AI amplifies human potential—transforming our role from executors to AI collaboration experts.",
-    site: context.site,
-    items: sortedPosts.map((post) => ({
-      title: post.data.title,
-      pubDate: post.data.pubDate,
-      description: post.data.description,
-      link: `/blog/${post.slug}/`,
-    })),
-    customData: `<language>en-us</language>`,
-  });
+	return rss({
+		title: 'AI 网摘',
+		description: '精选 AI 应用技巧与行业趋势。日刊与周刊，不含学术论文。',
+		site: context.site,
+		items: clippings.map((clip) => ({
+			title: clip.data.title,
+			pubDate: clip.data.pubDate,
+			description: clip.data.description,
+			link: `/clip/${clip.slug}/`,
+			categories: clip.data.tags,
+		})),
+		customData: `<language>zh-cn</language>`,
+	});
 }

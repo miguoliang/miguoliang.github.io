@@ -1,0 +1,40 @@
+---
+import { tagToSlug } from '../lib/clippings';
+
+interface Props {
+	tags: string[];
+}
+
+const { tags } = Astro.props;
+---
+
+{tags.length > 0 && (
+	<ul class="tag-list">
+		{tags.map((tag) => (
+			<li>
+				<a href={`/tags/${tagToSlug(tag)}`}>#{tag}</a>
+			</li>
+		))}
+	</ul>
+)}
+
+<style>
+	.tag-list {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.35rem 0.6rem;
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	.tag-list a {
+		font-size: 0.72rem;
+		color: var(--text-muted);
+		text-decoration: none;
+	}
+
+	.tag-list a:hover {
+		color: var(--link-hover);
+	}
+</style>

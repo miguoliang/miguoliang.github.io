@@ -1,0 +1,60 @@
+---
+import { getAllClippings, getClippingsByTag, getAllTags } from '../../lib/clippings';
+import Layout from '../../layouts/Layout.astro';
+import ClippingCard from '../../components/ClippingCard.astro';
+
+export async function getStaticPaths() {
+	const clippings = await getAllClippings();
+	const tags = getAllTags(clippings);
+
+	return tags.map((tag) => ({
+		params: { tag: tag.slug },
+		props: { tagName: tag.name },
+	}));
+}
+
+const { tagName } = Astro.props;
+const clippings = getClippingsByTag(await getAllClippings(), tagName);
+---
+
+<Layout
+	title={`${tagName} | 标签`}
+	description={`标签「${tagName}」下的 AI 网摘文章，共 ${clippings.length} 篇。`}
+	wide
+>
+	<header class="page-header" data-pagefind-body>
+		<h1>#{tagName}</h1>
+		<p class="meta">{clippings.length} 篇 · <a href="/tags">全部标签</a></p>
+	</header>
+
+	<div class="clip-list" data-pagefind-body>
+		{clippings.map((clip) => <ClippingCard clip={clip} showEdition />)}
+	</div>
+</Layout>
+
+<style>
+	.page-header {
+		margin: 0;
+	}
+
+	h1 {
+		margin: 0;
+		font-size: 1.1rem;
+		font-weight: 600;
+	}
+
+	.meta {
+		margin: 0.25rem 0 0;
+		font-size: 0.75rem;
+		color: var(--text-muted);
+	}
+
+	.meta a {
+		color: var(--text-secondary);
+		text-decoration: none;
+	}
+
+	.meta a:hover {
+		text-decoration: underline;
+	}
+</style>

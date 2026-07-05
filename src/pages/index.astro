@@ -1,40 +1,104 @@
 ---
+import {
+	getAllClippings,
+	groupByEdition,
+	getEditionsByType,
+	formatEditionTitle,
+	editionPath,
+} from '../lib/clippings';
 import Layout from '../layouts/Layout.astro';
+import ClippingCard from '../components/ClippingCard.astro';
+
+const clippings = await getAllClippings();
+const editions = groupByEdition(clippings);
+const latestDaily = getEditionsByType(editions, 'daily')[0];
+const latestWeekly = getEditionsByType(editions, 'weekly')[0];
+const recentClips = clippings.slice(0, 6);
 ---
 
-<Layout title="Frank's Observation" description="Put on your common sense hat.">
-	<section class="hero">
-		<h1>Frank's Observation</h1>
-		<p class="subtitle">Put on your common sense hat.</p>
+<Layout
+	title="AI 网摘 | 应用技巧与行业趋势"
+	description="精选 AI 应用技巧与行业趋势。日刊与周刊，不含学术论文。"
+	wide
+>
+	{latestDaily && (
+		<section class="section">
+			<div class="section-header">
+				<h2>
+					<a href={editionPath('daily', latestDaily.edition)}>
+						{formatEditionTitle(latestDaily.edition, 'daily')}
+					</a>
+				</h2>
+				<a href="/daily">全部日刊</a>
+			</div>
+			<div class="clip-list">
+				{latestDaily.items.map((clip) => <ClippingCard clip={clip} />)}
+			</div>
+		</section>
+	)}
+
+	{latestWeekly && (
+		<section class="section">
+			<div class="section-header">
+				<h2>
+					<a href={editionPath('weekly', latestWeekly.edition)}>
+						{formatEditionTitle(latestWeekly.edition, 'weekly')}
+					</a>
+				</h2>
+				<a href="/weekly">全部周刊</a>
+			</div>
+			<div class="clip-list">
+				{latestWeekly.items.map((clip) => <ClippingCard clip={clip} />)}
+			</div>
+		</section>
+	)}
+
+	<section class="section">
+		<div class="section-header">
+			<h2>最近收录</h2>
+		</div>
+		<div class="clip-list">
+			{recentClips.map((clip) => <ClippingCard clip={clip} showEdition />)}
+		</div>
 	</section>
 </Layout>
 
 <style>
-	.hero {
-		min-height: calc(100vh - 200px);
+	.section {
+		margin-top: 0;
+	}
+
+	.section-header {
 		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-		text-align: center;
+		justify-content: space-between;
+		align-items: baseline;
 		gap: 1rem;
-	}
-	
-	h1 {
-		font-size: clamp(2.5rem, 8vw, 4rem);
 		margin: 0;
-		text-transform: uppercase;
-		letter-spacing: 0.2em;
-		color: var(--text-color);
-		transition: color 0.3s ease;
 	}
-	
-	.subtitle {
+
+	.section-header h2 {
 		margin: 0;
-		font-size: 1.1rem;
-		letter-spacing: 0.15em;
-		text-transform: uppercase;
-		color: var(--text-secondary);
-		transition: color 0.3s ease;
+		font-size: 0.95rem;
+		font-weight: 600;
+	}
+
+	.section-header h2 a {
+		color: inherit;
+		text-decoration: none;
+	}
+
+	.section-header h2 a:hover {
+		text-decoration: underline;
+	}
+
+	.section-header > a {
+		font-size: 0.75rem;
+		color: var(--text-muted);
+		text-decoration: none;
+		white-space: nowrap;
+	}
+
+	.section-header > a:hover {
+		color: var(--link-hover);
 	}
 </style>

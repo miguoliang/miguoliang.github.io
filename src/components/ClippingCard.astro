@@ -1,0 +1,99 @@
+---
+import type { Clipping } from '../lib/clippings';
+import TagList from './TagList.astro';
+
+interface Props {
+	clip: Clipping;
+	showEdition?: boolean;
+}
+
+const { clip, showEdition = false } = Astro.props;
+const { title, description, url, source, pubDate, edition, editionType, tags } = clip.data;
+const editionHref = editionType === 'daily' ? `/daily/${edition}` : `/weekly/${edition}`;
+const dateLabel = pubDate.toLocaleDateString('zh-CN', {
+	year: 'numeric',
+	month: 'short',
+	day: 'numeric',
+});
+---
+
+<article class="clip-card">
+	<h2>
+		<a href={`/clip/${clip.slug}`}>{title}</a>
+	</h2>
+	<p class="meta">
+		<time datetime={pubDate.toISOString()}>{dateLabel}</time>
+		{source && (
+			<>
+				<span class="sep">·</span>
+				<span>{source}</span>
+			</>
+		)}
+		{showEdition && (
+			<>
+				<span class="sep">·</span>
+				<a href={editionHref}>{editionType === 'daily' ? '日刊' : '周刊'} {edition}</a>
+			</>
+		)}
+		<span class="sep">·</span>
+		<a class="source-link" href={url} target="_blank" rel="noopener noreferrer">来源</a>
+	</p>
+	<p class="description">{description}</p>
+	<TagList tags={tags} />
+</article>
+
+<style>
+	.clip-card {
+		margin: 0;
+		padding: var(--region-y) var(--region-x);
+		border-bottom: 1px solid var(--border-color);
+	}
+
+	.clip-card:last-child {
+		border-bottom: none;
+	}
+
+	h2 {
+		margin: 0;
+		font-size: 1.05rem;
+		line-height: 1.4;
+		font-weight: 600;
+	}
+
+	h2 a {
+		color: inherit;
+		text-decoration: none;
+	}
+
+	h2 a:hover {
+		text-decoration: underline;
+	}
+
+	.meta {
+		margin: 0.2rem 0 0.35rem;
+		font-size: 0.78rem;
+		color: var(--text-muted);
+		line-height: 1.5;
+	}
+
+	.meta a {
+		color: var(--text-secondary);
+		text-decoration: none;
+	}
+
+	.meta a:hover {
+		color: var(--link-hover);
+		text-decoration: underline;
+	}
+
+	.sep {
+		margin: 0 0.35rem;
+	}
+
+	.description {
+		margin: 0 0 0.35rem;
+		font-size: 0.88rem;
+		color: var(--text-secondary);
+		line-height: 1.55;
+	}
+</style>

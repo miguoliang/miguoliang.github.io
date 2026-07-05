@@ -1,0 +1,76 @@
+---
+import { getAllClippings, getAllTags } from '../../lib/clippings';
+import Layout from '../../layouts/Layout.astro';
+
+const clippings = await getAllClippings();
+const tags = getAllTags(clippings);
+---
+
+<Layout title="标签" description="按标签浏览 AI 网摘文章。" wide>
+	<h1 class="page-title">标签 <span class="count">{tags.length}</span></h1>
+
+	{tags.length > 0 ? (
+		<ul class="tag-cloud">
+			{tags.map((tag) => (
+				<li>
+					<a href={`/tags/${tag.slug}`}>
+						#{tag.name}
+						<span class="num">{tag.count}</span>
+					</a>
+				</li>
+			))}
+		</ul>
+	) : (
+		<p class="empty">暂无标签。</p>
+	)}
+</Layout>
+
+<style>
+	.page-title {
+		margin: 0;
+		font-size: 1rem;
+		font-weight: 600;
+	}
+
+	.count {
+		font-weight: 400;
+		font-size: 0.8rem;
+		color: var(--text-muted);
+	}
+
+	.tag-cloud {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+	}
+
+	.tag-cloud li {
+		border-bottom: 1px solid var(--border-color);
+	}
+
+	.tag-cloud a {
+		display: flex;
+		justify-content: space-between;
+		align-items: baseline;
+		padding: var(--region-y) var(--region-x);
+		font-size: 0.88rem;
+		color: inherit;
+		text-decoration: none;
+	}
+
+	.tag-cloud a:hover {
+		text-decoration: underline;
+	}
+
+	.num {
+		font-size: 0.72rem;
+		color: var(--text-muted);
+	}
+
+	.empty {
+		margin: 0;
+		padding: var(--region-y) var(--region-x);
+		font-size: 0.88rem;
+		color: var(--text-secondary);
+	}
+</style>

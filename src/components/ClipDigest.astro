@@ -1,0 +1,111 @@
+---
+interface Props {
+	digestHtml: string;
+}
+
+const { digestHtml } = Astro.props;
+---
+
+{digestHtml && (
+	<section class="clip-digest" data-pagefind-body>
+		<div class="digest-prose" set:html={digestHtml} />
+	</section>
+)}
+
+<style>
+	.clip-digest {
+		flex-shrink: 0;
+		padding: var(--region-y) var(--region-x);
+		border-bottom: 1px solid var(--border-color);
+	}
+
+	.digest-prose {
+		font-size: 0.95rem;
+		line-height: 1.75;
+		color: var(--text-color);
+	}
+
+	.digest-prose :global(h3) {
+		margin: 1.25rem 0 0.5rem;
+		font-size: 0.82rem;
+		font-weight: 600;
+		letter-spacing: 0.04em;
+		color: var(--text-secondary);
+	}
+
+	.digest-prose :global(h3:first-child) {
+		margin-top: 0;
+	}
+
+	.digest-prose :global(p) {
+		margin: 0 0 0.75rem;
+	}
+
+	.digest-prose :global(ol),
+	.digest-prose :global(ul) {
+		margin: 0 0 0.85rem;
+		padding-left: 1.25rem;
+	}
+
+	.digest-prose :global(li) {
+		margin-bottom: 0.35rem;
+	}
+
+	.digest-prose :global(li:last-child) {
+		margin-bottom: 0;
+	}
+
+	.digest-prose :global(table) {
+		width: 100%;
+		border-collapse: collapse;
+		margin: 0 0 1rem;
+		font-size: 0.88rem;
+	}
+
+	.digest-prose :global(th),
+	.digest-prose :global(td) {
+		border: 1px solid var(--border-color);
+		padding: 0.5rem 0.65rem;
+		text-align: left;
+		vertical-align: top;
+	}
+
+	.digest-prose :global(th) {
+		background: color-mix(in srgb, var(--border-color) 35%, transparent);
+		font-weight: 600;
+	}
+
+	.digest-prose :global(strong) {
+		font-weight: 600;
+	}
+
+	.digest-prose :global(img) {
+		display: block;
+		width: 100%;
+		max-width: 100%;
+		height: auto;
+		margin: 0.5rem 0 0.35rem;
+	}
+
+	.digest-prose :global(em) {
+		display: block;
+		margin: 0 0 1rem;
+		font-size: 0.78rem;
+		color: var(--text-muted);
+		font-style: normal;
+	}
+
+	.digest-prose :global(pre.mermaid) {
+		margin: 0.5rem 0 0.35rem;
+		padding: 0.75rem;
+		min-height: 140px;
+		border: 1px solid var(--border-color);
+		border-radius: 6px;
+		background: color-mix(in srgb, var(--border-color) 18%, transparent);
+	}
+
+	.digest-prose :global(pre.mermaid svg) {
+		max-width: 100%;
+		height: auto;
+	}
+</style>

@@ -1,0 +1,130 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import ClipArticle from '../../components/ClipArticle.astro';
+import ClipDigest from '../../components/ClipDigest.astro';
+import TagList from '../../components/TagList.astro';
+import { editionPath } from '../../lib/clippings';
+import { splitClippingBody } from '../../lib/clipping-body';
+import { renderMarkdown } from '../../lib/markdown';
+
+export async function getStaticPaths() {
+	const clippings = await getCollection('clippings');
+	return clippings.map((clip) => ({
+		params: { slug: clip.slug },
+		props: clip,
+	}));
+}
+
+const clip = Astro.props;
+const { digest, article } = splitClippingBody(clip.body);
+const digestHtml = (await renderMarkdown(digest)).code;
+const articleHtml = (await renderMarkdown(article)).code;
+const { title, description, url, source, pubDate, edition, editionType, tags, author } = clip.data;
+
+const jsonLd = {
+	'@context': 'https://schema.org',
+	'@type': 'Article',
+	headline: title,
+	description,
+	datePublished: pubDate.toISOString(),
+	author: author ? { '@type': 'Person', name: author } : undefined,
+	mainEntityOfPage: url,
+	inLanguage: 'zh-CN',
+	keywords: tags.join(', '),
+};
+---
+
+<Layout
+	title={`${title} | AI 网摘`}
+	description={description}
+	pubDate={pubDate}
+	author={author}
+	jsonLd={jsonLd}
+	wide
+>
+	<article class="clip-article">
+		<header class="clip-header" data-pagefind-body>
+			<h1>{title}</h1>
+			<p class="meta">
+				<time datetime={pubDate.toISOString()}>
+					{pubDate.toLocaleDateString('zh-CN', {
+						year: 'numeric',
+						month: 'long',
+						day: 'numeric',
+					})}
+				</time>
+				{source && (
+					<>
+						<span class="sep">·</span>
+						<span>{source}</span>
+					</>
+				)}
+				<span class="sep">·</span>
+				<a href={editionPath(editionType, edition)}>
+					{editionType === 'daily' ? '日刊' : '周刊'} {edition}
+				</a>
+				<span class="sep">·</span>
+				<a class="source-link" href={url} target="_blank" rel="noopener noreferrer">来源 ↗</a>
+			</p>
+			<p class="description">{description}</p>
+			<TagList tags={tags} />
+		</header>
+
+		<ClipDigest digestHtml={digestHtml} />
+
+		{article && <ClipArticle html={articleHtml} pagefind />}
+	</article>
+</Layout>
+
+<style>
+	.clip-article {
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+		width: 100%;
+		min-height: 0;
+	}
+
+	.clip-header {
+		flex-shrink: 0;
+		margin: 0;
+		padding: var(--region-y) var(--region-x);
+		border-bottom: 1px solid var(--border-color);
+	}
+
+	h1 {
+		margin: 0;
+		font-size: 1.5rem;
+		line-height: 1.35;
+		font-weight: 600;
+	}
+
+	.meta {
+		margin: 0.35rem 0 0.5rem;
+		font-size: 0.78rem;
+		color: var(--text-muted);
+		line-height: 1.5;
+	}
+
+	.meta a {
+		color: var(--text-secondary);
+		text-decoration: none;
+	}
+
+	.meta a:hover {
+		color: var(--link-hover);
+		text-decoration: underline;
+	}
+
+	.sep {
+		margin: 0 0.35rem;
+	}
+
+	.description {
+		margin: 0 0 0.35rem;
+		font-size: 0.88rem;
+		color: var(--text-secondary);
+		line-height: 1.55;
+	}
+</style>

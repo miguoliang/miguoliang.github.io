@@ -1,0 +1,72 @@
+---
+import { getClippingsByType, groupByEdition } from '../../lib/clippings';
+import Layout from '../../layouts/Layout.astro';
+import { formatEditionTitle, editionPath } from '../../lib/clippings';
+
+const clippings = await getClippingsByType('daily');
+const editions = groupByEdition(clippings);
+---
+
+<Layout title="AI 日刊" description="每日精选 AI 应用技巧与行业动态。" wide>
+	<h1 class="page-title">日刊</h1>
+
+	{editions.length > 0 ? (
+		<ul class="edition-list">
+			{editions.map((group) => (
+				<li>
+					<a href={editionPath('daily', group.edition)}>
+						<span>{formatEditionTitle(group.edition, 'daily')}</span>
+						<span class="count">{group.items.length}</span>
+					</a>
+				</li>
+			))}
+		</ul>
+	) : (
+		<p class="empty">暂无日刊。</p>
+	)}
+</Layout>
+
+<style>
+	.page-title {
+		margin: 0;
+		font-size: 1rem;
+		font-weight: 600;
+	}
+
+	.edition-list {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+	}
+
+	.edition-list li {
+		border-bottom: 1px solid var(--border-color);
+	}
+
+	.edition-list a {
+		display: flex;
+		justify-content: space-between;
+		align-items: baseline;
+		gap: 1rem;
+		padding: var(--region-y) var(--region-x);
+		color: inherit;
+		text-decoration: none;
+		font-size: 0.92rem;
+	}
+
+	.edition-list a:hover span:first-child {
+		text-decoration: underline;
+	}
+
+	.count {
+		font-size: 0.75rem;
+		color: var(--text-muted);
+	}
+
+	.empty {
+		margin: 0;
+		padding: var(--region-y) var(--region-x);
+		font-size: 0.88rem;
+		color: var(--text-secondary);
+	}
+</style>
