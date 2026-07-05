@@ -6,6 +6,8 @@
     "dev": "astro dev",
     "build": "node scripts/check-clipping-links.mjs && astro build && pagefind --site dist",
     "check:links": "node scripts/check-clipping-links.mjs",
+    "discover:clips": "node scripts/discover-clips.mjs",
+    "discover:clips:json": "node scripts/discover-clips.mjs --json",
     "preview": "astro preview",
     "astro": "astro"
   },

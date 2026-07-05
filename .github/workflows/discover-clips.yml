@@ -1,0 +1,79 @@
+name: Discover clip candidates
+
+on:
+  schedule:
+    # 每天 09:00 (UTC+8) = 01:00 UTC
+    - cron: '0 1 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Discover candidates
+        id: discover
+        run: |
+          node scripts/discover-clips.mjs --markdown > discovered.md
+          node scripts/discover-clips.mjs --json > discovered.json
+          count=$(node -e "console.log(JSON.parse(require('fs').readFileSync('discovered.json','utf8')).candidates.length)")
+          echo "count=$count" >> "$GITHUB_OUTPUT"
+
+      - name: Open GitHub Issue with candidates
+        if: steps.discover.outputs.count != '0'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const body = fs.readFileSync('discovered.md', 'utf8');
+            const today = new Date().toISOString().slice(0, 10);
+            const title = `AI 网摘候选 · ${today}`;
+            for (const name of ['clip-candidate', 'automation']) {
+              try {
+                await github.rest.issues.getLabel({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  name,
+                });
+              } catch {
+                await github.rest.issues.createLabel({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  name,
+                  color: name === 'clip-candidate' ? '1d76db' : 'ededed',
+                });
+              }
+            }
+            const { data: issues } = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: 'clip-candidate',
+              per_page: 5,
+            });
+            if (issues.length > 0) {
+              core.info(`Open clip-candidate issue already exists: #${issues[0].number}`);
+              return;
+            }
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title,
+              body,
+              labels: ['clip-candidate', 'automation'],
+            });
+
+      - name: No candidates
+        if: steps.discover.outputs.count == '0'
+        run: echo "No new clip candidates today."

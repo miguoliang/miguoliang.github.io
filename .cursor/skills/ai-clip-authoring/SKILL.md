@@ -103,3 +103,45 @@ author: "作者或机构"
 ## 示例
 
 完整范文见 [examples.md](examples.md)。
+
+## 每日自动发现（白名单）
+
+不用手找源时，用仓库内置发现流程。
+
+### 白名单配置
+
+`config/clip-sources.json`
+
+- `sources[]`：每个源含 `name`、`rss` 或 `listingUrl`+`urlPrefix`、`tags`、`enabled`
+- `excludeUrlPatterns` / `excludeTitlePatterns`：过滤论文、arxiv 等
+- `lookbackDays`：只捞最近 N 天
+- 改白名单后无需改代码；`enabled: false` 可临时关闭某源
+
+### 本地发现
+
+```bash
+npm run discover:clips              # 终端摘要
+node scripts/discover-clips.mjs --markdown   # Issue 正文格式
+```
+
+### GitHub Actions（已配置）
+
+工作流 `.github/workflows/discover-clips.yml` 每天 **09:00 UTC+8** 跑发现脚本。有新候选且没有未关闭的 `clip-candidate` Issue 时，自动开 Issue 列出链接。
+
+**在 App 里摘抄**：打开当日 Issue，说：
+
+> 按 ai-clip-authoring skill，把 Issue 里第 1 篇写成今日日刊
+
+Agent 读 skill + 抓原文 + 写 `src/content/clippings/<slug>.md` + `npm run build`。
+
+### 可选：Cursor Automation
+
+在 Cursor App 建每日定时 Automation（cron `0 9 * * *` 北京时间需在编辑器选每天 9:00）：
+
+1. 检出 `miguoliang/miguoliang.github.io` main
+2. 读 `.cursor/skills/ai-clip-authoring/SKILL.md`
+3. 跑 `npm run discover:clips:json`，选**未收录**且最贴合「应用技巧/行业趋势」的一篇
+4. 撰写网摘、校验链接、`npm run build`
+5. 开 PR（标题 `clip: <slug>`），不要直接推 main
+
+若发现脚本失败，检查 `config/clip-sources.json` 里对应源的 RSS/列表页是否仍有效。

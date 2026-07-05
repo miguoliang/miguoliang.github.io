@@ -1,0 +1,106 @@
+{
+  "lookbackDays": 14,
+  "maxPerSource": 4,
+  "maxTotal": 12,
+  "excludeUrlPatterns": [
+    "arxiv.org",
+    "/pdf/",
+    "doi.org",
+    "aclanthology",
+    "papers.",
+    "research.google"
+  ],
+  "excludeTitlePatterns": [
+    "arxiv",
+    "paper:",
+    "benchmark study",
+    "scaling law",
+    "peer review",
+    "dissertation",
+    "thesis",
+    "survey paper",
+    "meta-analysis"
+  ],
+  "sources": [
+    {
+      "id": "simon-willison",
+      "name": "Simon Willison",
+      "rss": "https://simonwillison.net/atom/everything/",
+      "tags": ["应用技巧"],
+      "enabled": true,
+      "note": "LLM 工具与实践，偏工程向"
+    },
+    {
+      "id": "saastr",
+      "name": "SaaStr",
+      "rss": "https://www.saastr.com/feed/",
+      "tags": ["行业趋势", "SaaS"],
+      "enabled": true,
+      "note": "B2B / SaaS / AI 商业观察"
+    },
+    {
+      "id": "openai-blog",
+      "name": "OpenAI Blog",
+      "rss": "https://openai.com/blog/rss.xml",
+      "tags": ["行业趋势", "应用技巧"],
+      "enabled": true,
+      "note": "产品发布与工程实践；标题含 research/paper 的会被过滤"
+    },
+    {
+      "id": "google-ai",
+      "name": "Google AI Blog",
+      "rss": "https://blog.google/technology/ai/rss/",
+      "tags": ["行业趋势", "应用技巧"],
+      "enabled": true
+    },
+    {
+      "id": "cloudflare-ai",
+      "name": "Cloudflare AI",
+      "rss": "https://blog.cloudflare.com/tag/ai/rss/",
+      "tags": ["应用技巧"],
+      "enabled": true
+    },
+    {
+      "id": "ai-news",
+      "name": "AI News (curated)",
+      "rss": "https://buttondown.com/ainews/rss",
+      "tags": ["行业趋势"],
+      "enabled": true,
+      "note": "每日精选链接，适合发现候选"
+    },
+    {
+      "id": "interconnects",
+      "name": "Interconnects",
+      "rss": "https://www.interconnects.ai/feed",
+      "tags": ["行业趋势"],
+      "enabled": true,
+      "note": "AI 产业分析；偏研究标题会被过滤"
+    },
+    {
+      "id": "latent-space",
+      "name": "Latent Space",
+      "rss": "https://www.latent.space/feed",
+      "tags": ["行业趋势", "应用技巧"],
+      "enabled": false,
+      "note": "默认关闭：访谈质量高但偶有偏理论内容，确认后可开启"
+    },
+    {
+      "id": "anthropic-engineering",
+      "name": "Anthropic Engineering",
+      "listingUrl": "https://www.anthropic.com/engineering",
+      "urlPrefix": "https://www.anthropic.com/engineering/",
+      "tags": ["应用技巧", "Agents"],
+      "enabled": true,
+      "note": "无 RSS，从 engineering 列表页抓取"
+    },
+    {
+      "id": "cursor-blog",
+      "name": "Cursor",
+      "listingUrl": "https://cursor.com/blog",
+      "urlPrefix": "https://cursor.com/blog/",
+      "tags": ["应用技巧", "Cursor"],
+      "enabled": true,
+      "note": "无 RSS，从 blog 列表页抓取"
+    }
+  ]
+}
