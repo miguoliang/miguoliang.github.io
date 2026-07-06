@@ -1,0 +1,9 @@
+{
+  "timezone": "Asia/Shanghai",
+  "maxArticleChars": 28000,
+  "llm": {
+    "provider": "anthropic",
+    "model": "claude-sonnet-4-20250514",
+    "maxTokens": 8192
+  }
+}

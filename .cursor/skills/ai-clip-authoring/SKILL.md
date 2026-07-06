@@ -106,42 +106,45 @@ author: "作者或机构"
 
 ## 每日自动发现（白名单）
 
-不用手找源时，用仓库内置发现流程。
+**全自动，无需本地电脑或 Cursor App。** GitHub Actions 每天云端执行：发现 → LLM 写网摘 → 提交 `main` → 自动部署。
+
+### 一次性配置（GitHub 仓库 Settings）
+
+1. **Secrets → Actions** 添加其一：
+   - `ANTHROPIC_API_KEY`（默认，推荐）
+   - 或 `OPENAI_API_KEY`（同时设 Repository variable `CLIP_LLM_PROVIDER` = `openai`）
+2. 可选 **Variables**：
+   - `CLIP_LLM_PROVIDER`：`anthropic` | `openai`
+   - `CLIP_LLM_MODEL`：覆盖 `config/automation.json` 里的模型
+
+### 云端流水线
+
+工作流：`.github/workflows/daily-clip.yml`
+
+| 时间 | 动作 |
+|------|------|
+| 每天 09:00 UTC+8 | 白名单发现候选 |
+| 同日无日刊 | 选优先级最高的一篇 |
+| LLM | 按本 skill 写 `src/content/clippings/<slug>.md` |
+| 校验 | `check-clipping-links` |
+| 提交 | `clip: auto daily YYYY-MM-DD` 推 `main` |
+
+手动重跑：**Actions → Daily clip (auto) → Run workflow**
 
 ### 白名单配置
 
-`config/clip-sources.json`
+`config/clip-sources.json` — 改 `sources`、`enabled`、`exclude*Patterns`、`lookbackDays`
 
-- `sources[]`：每个源含 `name`、`rss` 或 `listingUrl`+`urlPrefix`、`tags`、`enabled`
-- `excludeUrlPatterns` / `excludeTitlePatterns`：过滤论文、arxiv 等
-- `lookbackDays`：只捞最近 N 天
-- 改白名单后无需改代码；`enabled: false` 可临时关闭某源
-
-### 本地发现
+### 本地调试（可选）
 
 ```bash
-npm run discover:clips              # 终端摘要
-node scripts/discover-clips.mjs --markdown   # Issue 正文格式
+export ANTHROPIC_API_KEY=sk-...
+npm run discover:clips          # 只看候选
+npm run auto:clip               # 生成但不 commit
 ```
 
-### GitHub Actions（已配置）
+### 模型与篇幅
 
-工作流 `.github/workflows/discover-clips.yml` 每天 **09:00 UTC+8** 跑发现脚本。有新候选且没有未关闭的 `clip-candidate` Issue 时，自动开 Issue 列出链接。
+`config/automation.json` — `timezone`、`maxArticleChars`、`llm.model`
 
-**在 App 里摘抄**：打开当日 Issue，说：
-
-> 按 ai-clip-authoring skill，把 Issue 里第 1 篇写成今日日刊
-
-Agent 读 skill + 抓原文 + 写 `src/content/clippings/<slug>.md` + `npm run build`。
-
-### 可选：Cursor Automation
-
-在 Cursor App 建每日定时 Automation（cron `0 9 * * *` 北京时间需在编辑器选每天 9:00）：
-
-1. 检出 `miguoliang/miguoliang.github.io` main
-2. 读 `.cursor/skills/ai-clip-authoring/SKILL.md`
-3. 跑 `npm run discover:clips:json`，选**未收录**且最贴合「应用技巧/行业趋势」的一篇
-4. 撰写网摘、校验链接、`npm run build`
-5. 开 PR（标题 `clip: <slug>`），不要直接推 main
-
-若发现脚本失败，检查 `config/clip-sources.json` 里对应源的 RSS/列表页是否仍有效。
+若发现脚本失败，检查白名单源的 RSS/列表页是否仍有效。

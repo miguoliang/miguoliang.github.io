@@ -8,7 +8,8 @@
  */
 
 import { readFileSync, readdirSync } from 'node:fs';
-import { join } from 'node:path';
+import { join, resolve } from 'node:path';
+import { pathToFileURL } from 'node:url';
 
 const root = process.cwd();
 const configPath = join(root, 'config/clip-sources.json');
@@ -156,7 +157,7 @@ function withinLookback(dateStr) {
 	return parsed.getTime() >= cutoff;
 }
 
-async function discover() {
+export async function discover() {
 	const existing = loadExistingUrls();
 	const candidates = [];
 	const errors = [];
@@ -231,7 +232,7 @@ function formatMarkdown(result) {
 		'',
 		`白名单发现 **${result.candidates.length}** 篇新文章（近 ${config.lookbackDays} 天，已排除已有 URL）。`,
 		'',
-		'在 Cursor App 中说：「按 ai-clip-authoring skill，把下面第一篇写成今日日刊」即可自动摘抄。',
+		'在 GitHub Actions 全自动流水线中会直接生成网摘；本地可 `npm run auto:clip` 试跑（需 API Key）。',
 		'',
 	];
 
@@ -261,13 +262,17 @@ function formatMarkdown(result) {
 	return lines.join('\n');
 }
 
-const result = await discover();
+const isMain = import.meta.url === pathToFileURL(resolve(process.argv[1] ?? '')).href;
 
-if (format === 'json') {
-	console.log(JSON.stringify(result, null, 2));
-} else if (format === 'markdown') {
-	console.log(formatMarkdown(result));
-} else {
-	console.log(formatText(result));
-	process.exit(result.candidates.length ? 0 : 1);
+if (isMain) {
+	const result = await discover();
+
+	if (format === 'json') {
+		console.log(JSON.stringify(result, null, 2));
+	} else if (format === 'markdown') {
+		console.log(formatMarkdown(result));
+	} else {
+		console.log(formatText(result));
+		process.exit(result.candidates.length ? 0 : 0);
+	}
 }
