@@ -29,26 +29,50 @@ jobs:
           node-version: '22'
           cache: npm
 
-      - name: Configure git
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
       - name: Install dependencies
         run: npm ci
 
-      - name: Generate daily clip
-        env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          CLIP_LLM_PROVIDER: ${{ vars.CLIP_LLM_PROVIDER || 'anthropic' }}
-          CLIP_LLM_MODEL: ${{ vars.CLIP_LLM_MODEL }}
-        run: node scripts/auto-daily-clip.mjs --commit
-
-      - name: Push to main
+      - name: Prepare today's candidate
+        id: prep
         run: |
-          if git rev-list --count origin/main..HEAD 2>/dev/null | grep -qv '^0$'; then
-            git push origin HEAD:main
+          set -euo pipefail
+          node scripts/prepare-daily-candidate.mjs | tee prep.log
+          if grep -q '^READY$' prep.log; then
+            echo "has_candidate=true" >> "$GITHUB_OUTPUT"
           else
-            echo "No new commit to push."
+            echo "has_candidate=false" >> "$GITHUB_OUTPUT"
           fi
+
+      - name: Install Cursor CLI
+        if: steps.prep.outputs.has_candidate == 'true'
+        run: |
+          curl https://cursor.com/install -fsS | bash
+          echo "$HOME/.cursor/bin" >> "$GITHUB_PATH"
+
+      - name: Write clip with Cursor Agent
+        if: steps.prep.outputs.has_candidate == 'true'
+        env:
+          CURSOR_API_KEY: ${{ secrets.CURSOR_API_KEY }}
+        run: |
+          set -euo pipefail
+          PROMPT="$(node scripts/build-cursor-prompt.mjs)"
+          agent -p --force --output-format text --model "${CLIP_CURSOR_MODEL:-composer-2.5}" "$PROMPT"
+
+      - name: Validate links
+        if: steps.prep.outputs.has_candidate == 'true'
+        run: npm run check:links
+
+      - name: Commit and push
+        if: steps.prep.outputs.has_candidate == 'true'
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/content/clippings/
+          if git diff --staged --quiet; then
+            echo "Cursor agent did not create a clipping file."
+            exit 1
+          fi
+          EDITION=$(node -p "JSON.parse(require('fs').readFileSync('data/daily-candidate.json','utf8')).edition")
+          git commit -m "clip: auto daily ${EDITION}"
+          git push origin HEAD:main

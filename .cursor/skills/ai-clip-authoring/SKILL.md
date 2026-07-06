@@ -106,45 +106,42 @@ author: "作者或机构"
 
 ## 每日自动发现（白名单）
 
-**全自动，无需本地电脑或 Cursor App。** GitHub Actions 每天云端执行：发现 → LLM 写网摘 → 提交 `main` → 自动部署。
+**全自动，无需本地电脑。** GitHub Actions 每天云端执行：白名单发现 → **Cursor Agent** 写网摘 → 校验 → 推 `main` → 部署。
 
 ### 一次性配置（GitHub 仓库 Settings）
 
-1. **Secrets → Actions** 添加其一：
-   - `ANTHROPIC_API_KEY`（默认，推荐）
-   - 或 `OPENAI_API_KEY`（同时设 Repository variable `CLIP_LLM_PROVIDER` = `openai`）
-2. 可选 **Variables**：
-   - `CLIP_LLM_PROVIDER`：`anthropic` | `openai`
-   - `CLIP_LLM_MODEL`：覆盖 `config/automation.json` 里的模型
+**Secrets → Actions** 添加：
+
+| Secret | 说明 |
+|--------|------|
+| **`CURSOR_API_KEY`** | [Cursor Dashboard → Integrations](https://cursor.com/dashboard/integrations) 创建 |
+
+不再需要 `ANTHROPIC_API_KEY` / `OPENAI_API_KEY`。
+
+可选 **Variable**：`CLIP_CURSOR_MODEL`（默认 `composer-2.5`）
 
 ### 云端流水线
 
 工作流：`.github/workflows/daily-clip.yml`
 
-| 时间 | 动作 |
+| 步骤 | 说明 |
 |------|------|
-| 每天 09:00 UTC+8 | 白名单发现候选 |
-| 同日无日刊 | 选优先级最高的一篇 |
-| LLM | 按本 skill 写 `src/content/clippings/<slug>.md` |
-| 校验 | `check-clipping-links` |
-| 提交 | `clip: auto daily YYYY-MM-DD` 推 `main` |
+| 发现 | `scripts/prepare-daily-candidate.mjs` 从白名单选一篇 |
+| 写作 | **Cursor CLI** `agent -p --force`（读 skill + 候选 JSON） |
+| 校验 | `npm run check:links` |
+| 发布 | commit 推 `main` |
 
 手动重跑：**Actions → Daily clip (auto) → Run workflow**
 
-### 白名单配置
+### 白名单
 
-`config/clip-sources.json` — 改 `sources`、`enabled`、`exclude*Patterns`、`lookbackDays`
+`config/clip-sources.json`
 
-### 本地调试（可选）
+### 本地调试
 
 ```bash
-export ANTHROPIC_API_KEY=sk-...
-npm run discover:clips          # 只看候选
-npm run auto:clip               # 生成但不 commit
+npm run prepare:candidate    # 写出 data/daily-candidate.json 或 SKIP
+npm run discover:clips       # 只看候选列表
 ```
 
-### 模型与篇幅
-
-`config/automation.json` — `timezone`、`maxArticleChars`、`llm.model`
-
-若发现脚本失败，检查白名单源的 RSS/列表页是否仍有效。
+本地用 Cursor 写文需安装 CLI 并 export `CURSOR_API_KEY`，再跑 `node scripts/build-cursor-prompt.mjs | agent -p --force`.

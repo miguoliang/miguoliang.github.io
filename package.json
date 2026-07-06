@@ -8,7 +8,7 @@
     "check:links": "node scripts/check-clipping-links.mjs",
     "discover:clips": "node scripts/discover-clips.mjs",
     "discover:clips:json": "node scripts/discover-clips.mjs --json",
-    "auto:clip": "node scripts/auto-daily-clip.mjs",
+    "prepare:candidate": "node scripts/prepare-daily-candidate.mjs",
     "preview": "astro preview",
     "astro": "astro"
   },
