@@ -8,6 +8,7 @@ on:
 
 permissions:
   contents: write
+  actions: write
 
 concurrency:
   group: daily-clip
@@ -76,3 +77,9 @@ jobs:
           EDITION=$(node -p "JSON.parse(require('fs').readFileSync('data/daily-candidate.json','utf8')).edition")
           git commit -m "clip: auto daily ${EDITION}"
           git push origin HEAD:main
+
+      - name: Trigger site deploy
+        if: steps.prep.outputs.has_candidate == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh workflow run "Deploy to GitHub Pages" --ref main
