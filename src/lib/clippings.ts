@@ -19,6 +19,24 @@ export type EditionGroup = {
 	latestDate: Date;
 };
 
+/** Sort key for edition identifiers (newer editions sort higher). */
+export function editionSortKey(edition: string, type: EditionType): number {
+	if (type === 'daily') {
+		return new Date(`${edition}T12:00:00`).getTime();
+	}
+
+	const match = edition.match(/^(\d{4})-w(\d{1,2})$/i);
+	if (match) {
+		return Number(match[1]) * 100 + Number(match[2]);
+	}
+
+	return 0;
+}
+
+export function compareEditionGroups(a: EditionGroup, b: EditionGroup): number {
+	return editionSortKey(b.edition, b.type) - editionSortKey(a.edition, a.type);
+}
+
 export function groupByEdition(clippings: Clipping[]): EditionGroup[] {
 	const groups = new Map<string, Clipping[]>();
 
@@ -41,11 +59,11 @@ export function groupByEdition(clippings: Clipping[]): EditionGroup[] {
 				latestDate: sorted[0].data.pubDate,
 			};
 		})
-		.sort((a, b) => b.latestDate.valueOf() - a.latestDate.valueOf());
+		.sort(compareEditionGroups);
 }
 
 export function getEditionsByType(groups: EditionGroup[], type: EditionType): EditionGroup[] {
-	return groups.filter((group) => group.type === type);
+	return groups.filter((group) => group.type === type).sort(compareEditionGroups);
 }
 
 export function formatEditionTitle(edition: string, type: EditionType): string {
