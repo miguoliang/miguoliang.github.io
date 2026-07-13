@@ -65,8 +65,8 @@ description: "列表卡片用的一句话，说清价值"
 url: "https://..."          # 必须可访问，构建会校验
 source: "来源名"
 pubDate: 2026-07-05
-edition: "2026-07-05"       # 日刊 YYYY-MM-DD；周刊 YYYY-wNN
-editionType: daily          # daily | weekly
+edition: "2026-07-05"       # 日刊 YYYY-MM-DD
+editionType: daily
 tags: ["应用技巧", "..."]
 author: "作者或机构"
 ---

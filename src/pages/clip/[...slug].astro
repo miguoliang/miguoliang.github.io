@@ -20,7 +20,7 @@ const clip = Astro.props;
 const { digest, article } = splitClippingBody(clip.body);
 const digestHtml = (await renderMarkdown(digest)).code;
 const articleHtml = (await renderMarkdown(article)).code;
-const { title, description, url, source, pubDate, edition, editionType, tags, author } = clip.data;
+const { title, description, url, source, pubDate, edition, tags, author } = clip.data;
 
 const jsonLd = {
 	'@context': 'https://schema.org',
@@ -61,8 +61,8 @@ const jsonLd = {
 					</>
 				)}
 				<span class="sep">·</span>
-				<a href={editionPath(editionType, edition)}>
-					{editionType === 'daily' ? '日刊' : '周刊'} {edition}
+				<a href={editionPath(edition)}>
+					日刊 {edition}
 				</a>
 				<span class="sep">·</span>
 				<a class="source-link" href={url} target="_blank" rel="noopener noreferrer">来源 ↗</a>

@@ -1,9 +1,8 @@
 ---
-import { getClippingsByType, groupByEdition } from '../../lib/clippings';
+import { getAllClippings, groupByEdition, formatEditionTitle, editionPath } from '../../lib/clippings';
 import Layout from '../../layouts/Layout.astro';
-import { formatEditionTitle, editionPath } from '../../lib/clippings';
 
-const clippings = await getClippingsByType('daily');
+const clippings = await getAllClippings();
 const editions = groupByEdition(clippings);
 ---
 
@@ -14,8 +13,8 @@ const editions = groupByEdition(clippings);
 		<ul class="edition-list">
 			{editions.map((group) => (
 				<li>
-					<a href={editionPath('daily', group.edition)}>
-						<span>{formatEditionTitle(group.edition, 'daily')}</span>
+					<a href={editionPath(group.edition)}>
+						<span>{formatEditionTitle(group.edition)}</span>
 						<span class="count">{group.items.length}</span>
 					</a>
 				</li>

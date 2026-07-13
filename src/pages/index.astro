@@ -2,7 +2,6 @@
 import {
 	getAllClippings,
 	groupByEdition,
-	getEditionsByType,
 	formatEditionTitle,
 	editionPath,
 } from '../lib/clippings';
@@ -11,44 +10,27 @@ import ClippingCard from '../components/ClippingCard.astro';
 
 const clippings = await getAllClippings();
 const editions = groupByEdition(clippings);
-const latestDaily = getEditionsByType(editions, 'daily')[0];
-const latestWeekly = getEditionsByType(editions, 'weekly')[0];
+const latestDaily = editions[0];
 const recentClips = clippings.slice(0, 6);
 ---
 
 <Layout
 	title="AI 网摘 | 应用技巧与行业趋势"
-	description="精选 AI 应用技巧与行业趋势。日刊与周刊，不含学术论文。"
+	description="精选 AI 应用技巧与行业趋势。每日日刊，不含学术论文。"
 	wide
 >
 	{latestDaily && (
 		<section class="section">
 			<div class="section-header">
 				<h2>
-					<a href={editionPath('daily', latestDaily.edition)}>
-						{formatEditionTitle(latestDaily.edition, 'daily')}
+					<a href={editionPath(latestDaily.edition)}>
+						{formatEditionTitle(latestDaily.edition)}
 					</a>
 				</h2>
 				<a href="/daily">全部日刊</a>
 			</div>
 			<div class="clip-list">
 				{latestDaily.items.map((clip) => <ClippingCard clip={clip} />)}
-			</div>
-		</section>
-	)}
-
-	{latestWeekly && (
-		<section class="section">
-			<div class="section-header">
-				<h2>
-					<a href={editionPath('weekly', latestWeekly.edition)}>
-						{formatEditionTitle(latestWeekly.edition, 'weekly')}
-					</a>
-				</h2>
-				<a href="/weekly">全部周刊</a>
-			</div>
-			<div class="clip-list">
-				{latestWeekly.items.map((clip) => <ClippingCard clip={clip} />)}
 			</div>
 		</section>
 	)}

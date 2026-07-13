@@ -6,6 +6,10 @@ import sitemap from '@astrojs/sitemap';
 // https://astro.build/config
 export default defineConfig({
   site: 'https://miguoliang.com',
+  redirects: {
+    '/weekly': '/daily',
+    '/weekly/2026-w26': '/daily/2026-06-30',
+  },
   integrations: [
     mermaid({
       theme: 'neutral',
