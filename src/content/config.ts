@@ -22,7 +22,7 @@ const clippings = defineCollection({
 		source: z.string().optional(),
 		pubDate: z.coerce.date(),
 		edition: z.string(),
-		editionType: z.enum(['daily', 'weekly']),
+		editionType: z.literal('daily'),
 		tags: z.array(z.string()).default([]),
 		author: z.string().optional(),
 	}),

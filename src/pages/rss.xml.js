@@ -6,7 +6,7 @@ export async function GET(context) {
 
 	return rss({
 		title: 'AI 网摘',
-		description: '精选 AI 应用技巧与行业趋势。日刊与周刊，不含学术论文。',
+		description: '精选 AI 应用技巧与行业趋势。每日日刊，不含学术论文。',
 		site: context.site,
 		items: clippings.map((clip) => ({
 			title: clip.data.title,

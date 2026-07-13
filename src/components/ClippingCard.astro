@@ -1,5 +1,6 @@
 ---
 import type { Clipping } from '../lib/clippings';
+import { editionPath } from '../lib/clippings';
 import TagList from './TagList.astro';
 
 interface Props {
@@ -8,8 +9,8 @@ interface Props {
 }
 
 const { clip, showEdition = false } = Astro.props;
-const { title, description, url, source, pubDate, edition, editionType, tags } = clip.data;
-const editionHref = editionType === 'daily' ? `/daily/${edition}` : `/weekly/${edition}`;
+const { title, description, url, source, pubDate, edition, tags } = clip.data;
+const editionHref = editionPath(edition);
 const dateLabel = pubDate.toLocaleDateString('zh-CN', {
 	year: 'numeric',
 	month: 'short',
@@ -32,7 +33,7 @@ const dateLabel = pubDate.toLocaleDateString('zh-CN', {
 		{showEdition && (
 			<>
 				<span class="sep">·</span>
-				<a href={editionHref}>{editionType === 'daily' ? '日刊' : '周刊'} {edition}</a>
+				<a href={editionHref}>日刊 {edition}</a>
 			</>
 		)}
 		<span class="sep">·</span>

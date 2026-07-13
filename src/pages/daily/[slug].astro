@@ -1,10 +1,10 @@
 ---
-import { getClippingsByType, groupByEdition, formatEditionTitle } from '../../lib/clippings';
+import { getAllClippings, groupByEdition, formatEditionTitle } from '../../lib/clippings';
 import Layout from '../../layouts/Layout.astro';
 import ClippingCard from '../../components/ClippingCard.astro';
 
 export async function getStaticPaths() {
-	const clippings = await getClippingsByType('daily');
+	const clippings = await getAllClippings();
 	const editions = groupByEdition(clippings);
 
 	return editions.map((group) => ({
@@ -14,7 +14,7 @@ export async function getStaticPaths() {
 }
 
 const { group } = Astro.props;
-const title = formatEditionTitle(group.edition, 'daily');
+const title = formatEditionTitle(group.edition);
 ---
 
 <Layout title={title} description={`${title} — 精选 AI 资讯网摘。`} wide>

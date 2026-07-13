@@ -1,60 +1,41 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 
 export type Clipping = CollectionEntry<'clippings'>;
-export type EditionType = Clipping['data']['editionType'];
 
 export async function getAllClippings(): Promise<Clipping[]> {
 	const clippings = await getCollection('clippings');
 	return clippings.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 }
 
-export async function getClippingsByType(type: EditionType): Promise<Clipping[]> {
-	return (await getAllClippings()).filter((clip) => clip.data.editionType === type);
-}
-
 export type EditionGroup = {
 	edition: string;
-	type: EditionType;
 	items: Clipping[];
 	latestDate: Date;
 };
 
 /** Sort key for edition identifiers (newer editions sort higher). */
-export function editionSortKey(edition: string, type: EditionType): number {
-	if (type === 'daily') {
-		return new Date(`${edition}T12:00:00`).getTime();
-	}
-
-	const match = edition.match(/^(\d{4})-w(\d{1,2})$/i);
-	if (match) {
-		return Number(match[1]) * 100 + Number(match[2]);
-	}
-
-	return 0;
+export function editionSortKey(edition: string): number {
+	return new Date(`${edition}T12:00:00`).getTime();
 }
 
 export function compareEditionGroups(a: EditionGroup, b: EditionGroup): number {
-	return editionSortKey(b.edition, b.type) - editionSortKey(a.edition, a.type);
+	return editionSortKey(b.edition) - editionSortKey(a.edition);
 }
 
 export function groupByEdition(clippings: Clipping[]): EditionGroup[] {
 	const groups = new Map<string, Clipping[]>();
 
 	for (const clip of clippings) {
-		const key = `${clip.data.editionType}:${clip.data.edition}`;
-		const existing = groups.get(key) ?? [];
+		const existing = groups.get(clip.data.edition) ?? [];
 		existing.push(clip);
-		groups.set(key, existing);
+		groups.set(clip.data.edition, existing);
 	}
 
 	return [...groups.entries()]
-		.map(([key, items]) => {
-			const type = items[0].data.editionType;
-			const edition = items[0].data.edition;
+		.map(([edition, items]) => {
 			const sorted = items.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 			return {
 				edition,
-				type,
 				items: sorted,
 				latestDate: sorted[0].data.pubDate,
 			};
@@ -62,30 +43,17 @@ export function groupByEdition(clippings: Clipping[]): EditionGroup[] {
 		.sort(compareEditionGroups);
 }
 
-export function getEditionsByType(groups: EditionGroup[], type: EditionType): EditionGroup[] {
-	return groups.filter((group) => group.type === type).sort(compareEditionGroups);
+export function formatEditionTitle(edition: string): string {
+	const date = new Date(`${edition}T12:00:00`);
+	return `AI 日刊 · ${date.toLocaleDateString('zh-CN', {
+		year: 'numeric',
+		month: 'long',
+		day: 'numeric',
+	})}`;
 }
 
-export function formatEditionTitle(edition: string, type: EditionType): string {
-	if (type === 'daily') {
-		const date = new Date(`${edition}T12:00:00`);
-		return `AI 日刊 · ${date.toLocaleDateString('zh-CN', {
-			year: 'numeric',
-			month: 'long',
-			day: 'numeric',
-		})}`;
-	}
-
-	const match = edition.match(/^(\d{4})-w(\d{1,2})$/i);
-	if (match) {
-		return `AI 周刊 · ${match[1]} 年第 ${Number(match[2])} 周`;
-	}
-
-	return `AI 周刊 · ${edition}`;
-}
-
-export function editionPath(type: EditionType, edition: string): string {
-	return type === 'daily' ? `/daily/${edition}` : `/weekly/${edition}`;
+export function editionPath(edition: string): string {
+	return `/daily/${edition}`;
 }
 
 export type TagEntry = {

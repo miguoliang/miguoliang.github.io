@@ -4,8 +4,8 @@ description: "SaaStr 观察：企业很快会买不起、管不了上百个 AI A
 url: "https://www.saastr.com/when-we-all-have-100-ai-agents-what-happens-next-conslidation-its-coming/"
 source: "SaaStr"
 pubDate: 2026-06-30
-edition: "2026-w26"
-editionType: weekly
+edition: "2026-06-30"
+editionType: daily
 tags: ["行业趋势", "SaaS", "Agents"]
 author: "Jason Lemkin"
 ---
