@@ -7,6 +7,7 @@ import TagList from '../../components/TagList.astro';
 import { editionPath } from '../../lib/clippings';
 import { splitClippingBody } from '../../lib/clipping-body';
 import { renderMarkdown } from '../../lib/markdown';
+import { buildArticleJsonLd } from '../../lib/seo';
 
 export async function getStaticPaths() {
 	const clippings = await getCollection('clippings');
@@ -22,17 +23,18 @@ const digestHtml = (await renderMarkdown(digest)).code;
 const articleHtml = (await renderMarkdown(article)).code;
 const { title, description, url, source, pubDate, edition, tags, author } = clip.data;
 
-const jsonLd = {
-	'@context': 'https://schema.org',
-	'@type': 'Article',
-	headline: title,
+const pageUrl = Astro.url.href;
+const siteUrl = Astro.site ?? Astro.url.origin;
+const jsonLd = buildArticleJsonLd({
+	title,
 	description,
-	datePublished: pubDate.toISOString(),
-	author: author ? { '@type': 'Person', name: author } : undefined,
-	mainEntityOfPage: url,
-	inLanguage: 'zh-CN',
-	keywords: tags.join(', '),
-};
+	url: pageUrl,
+	pubDate,
+	author,
+	tags,
+	siteUrl,
+	image: new URL('/og-image.png', siteUrl).href,
+});
 ---
 
 <Layout

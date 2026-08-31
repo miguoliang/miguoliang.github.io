@@ -2,6 +2,7 @@
 import { getAllClippings, groupByEdition, formatEditionTitle } from '../../lib/clippings';
 import Layout from '../../layouts/Layout.astro';
 import ClippingCard from '../../components/ClippingCard.astro';
+import { buildArticleJsonLd } from '../../lib/seo';
 
 export async function getStaticPaths() {
 	const clippings = await getAllClippings();
@@ -15,9 +16,26 @@ export async function getStaticPaths() {
 
 const { group } = Astro.props;
 const title = formatEditionTitle(group.edition);
+const description = `${title} — 精选 AI 资讯网摘。`;
+const siteUrl = Astro.site ?? Astro.url.origin;
+const jsonLd = buildArticleJsonLd({
+	title,
+	description,
+	url: Astro.url.href,
+	pubDate: group.latestDate,
+	siteUrl,
+	image: new URL('/og-image.png', siteUrl).href,
+	type: 'CollectionPage',
+});
 ---
 
-<Layout title={title} description={`${title} — 精选 AI 资讯网摘。`} wide>
+<Layout
+	title={title}
+	description={description}
+	pubDate={group.latestDate}
+	jsonLd={jsonLd}
+	wide
+>
 	<header class="page-header" data-pagefind-body>
 		<h1>{title}</h1>
 		<p class="meta">{group.items.length} 篇 · <a href="/daily">全部日刊</a></p>
