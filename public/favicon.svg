@@ -1,9 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 128 128">
-    <path d="M50.4 78.5a75.1 75.1 0 0 0-28.5 6.9l24.2-65.7c.7-2 1.9-3.2 3.4-3.2h29c1.5 0 2.7 1.2 3.4 3.2l24.2 65.7s-11.6-7-28.5-7L67 45.5c-.4-1.7-1.6-2.8-2.9-2.8-1.3 0-2.5 1.1-2.9 2.7L50.4 78.5Zm-1.1 28.2Zm-4.2-20.2c-2 6.6-.6 15.8 4.2 20.2a17.5 17.5 0 0 1 .2-.7 5.5 5.5 0 0 1 5.7-4.5c2.8.1 4.3 1.5 4.7 4.7.2 1.1.2 2.3.2 3.5v.4c0 2.7.7 5.2 2.2 7.4a13 13 0 0 0 5.7 4.9v-.3l-.2-.3c-1.8-5.6-.5-9.5 4.4-12.8l1.5-1a73 73 0 0 0 3.2-2.2 16 16 0 0 0 6.8-11.4c.3-2 .1-4-.6-6l-.8.6-1.6 1a37 37 0 0 1-22.4 2.7c-5-.7-9.7-2-13.2-6.2Z" />
-    <style>
-        path { fill: #000; }
-        @media (prefers-color-scheme: dark) {
-            path { fill: #FFF; }
-        }
-    </style>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="AI 网摘">
+	<rect width="32" height="32" rx="8" fill="#2F4A3C"/>
+	<g transform="translate(4.4 23.345) scale(0.01032947 -0.01032947)">
+		<path fill="#F4F3EF" fill-rule="evenodd" transform="translate(-49 0)" d="M49 0 558 1490H958L1480 0H1141L1026 346H497L386 0ZM573 585H947L902 719Q866 833 830 966Q794 1099 755 1251Q718 1097 684 964Q650 831 616 719Z"/>
+		<path fill="#F4F3EF" transform="translate(1391 0)" d="M440 1490V0H135V1490Z"/>
+		<rect fill="#F4F3EF" x="1941" y="0" width="305" height="305"/>
+	</g>
 </svg>
