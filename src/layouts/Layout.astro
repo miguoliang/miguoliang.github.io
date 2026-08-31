@@ -81,6 +81,14 @@ const structuredData = jsonLd || defaultJsonLd;
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
+		<!-- Google tag (gtag.js) -->
+		<script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-2M7MGN5YXZ"></script>
+		<script is:inline>
+			window.dataLayer = window.dataLayer || [];
+			function gtag(){dataLayer.push(arguments);}
+			gtag('js', new Date());
+			gtag('config', 'G-2M7MGN5YXZ');
+		</script>
 		<link
 			rel="alternate"
 			type="application/rss+xml"
