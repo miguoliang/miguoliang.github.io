@@ -19,6 +19,12 @@ export default defineConfig({
         sequence: { diagramMarginX: 30, diagramMarginY: 8 },
       },
     }),
-    sitemap(),
+    sitemap({
+      filter: (page) => {
+        const pathname = new URL(page).pathname.replace(/\/$/, '');
+        return pathname !== '/search';
+      },
+      lastmod: new Date(),
+    }),
   ],
 });
