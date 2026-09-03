@@ -94,9 +94,23 @@ const structuredData = jsonLd || defaultJsonLd;
 		<script
 			is:inline
 			async
-			src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8962113707459496"
+			src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
 			crossorigin="anonymous"
 		></script>
+		<script is:inline>
+			(window.adsbygoogle = window.adsbygoogle || []).push({
+				google_ad_client: 'ca-pub-8962113707459496',
+				enable_page_level_ads: true,
+				overlays: { bottom: true, 'collapsed-bottom': true },
+				inserts: false,
+				vignettes: false,
+				interstitials: false,
+				immersives: false,
+				list_view: false,
+				full_page: false,
+				side_rails: false,
+			});
+		</script>
 		<link
 			rel="alternate"
 			type="application/rss+xml"
