@@ -1,9 +1,8 @@
 name: Daily clip (auto)
 
+# Daily clip content is now produced by the 运营数据 agent / Cloud Agent.
+# This workflow is optional manual backup; site build remains "Deploy to GitHub Pages".
 on:
-  schedule:
-    # 每天 09:00 (UTC+8) = 01:00 UTC
-    - cron: '0 1 * * *'
   workflow_dispatch:
 
 permissions:
