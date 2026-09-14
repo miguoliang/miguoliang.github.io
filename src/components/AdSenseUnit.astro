@@ -1,17 +1,24 @@
 ---
 /**
  * Fixed display unit at the end of clip articles only.
+ * adsbygoogle.js loads here (once per page), not from Layout.
  * Do not enable page-level Auto ads (overlays, inserts, vignettes).
  */
 ---
 
 <aside class="ad-unit" data-pagefind-ignore>
+	<script
+		is:inline
+		async
+		src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8962113707459496"
+		crossorigin="anonymous"
+	></script>
 	<ins
 		class="adsbygoogle"
 		style="display:block"
 		data-ad-client="ca-pub-8962113707459496"
 		data-ad-slot="8336087297"
-		data-ad-format="auto"
+		data-ad-format="horizontal"
 		data-full-width-responsive="true"
 	></ins>
 	<script is:inline>
