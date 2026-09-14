@@ -1,0 +1,37 @@
+---
+/**
+ * Fixed display unit at the end of clip articles only.
+ * Do not enable page-level Auto ads (overlays, inserts, vignettes).
+ */
+---
+
+<aside class="ad-unit" data-pagefind-ignore>
+	<ins
+		class="adsbygoogle"
+		style="display:block"
+		data-ad-client="ca-pub-8962113707459496"
+		data-ad-slot="8336087297"
+		data-ad-format="auto"
+		data-full-width-responsive="true"
+	></ins>
+	<script is:inline>
+		(window.adsbygoogle = window.adsbygoogle || []).push({});
+	</script>
+</aside>
+
+<style>
+	.ad-unit {
+		flex-shrink: 0;
+		margin-top: 1.25rem;
+		margin-inline: auto 0;
+		padding: 0 var(--region-x) var(--region-y);
+		max-width: 42rem;
+		width: 100%;
+		box-sizing: border-box;
+	}
+
+	.ad-unit :global(ins.adsbygoogle) {
+		display: block;
+		max-width: 100%;
+	}
+</style>

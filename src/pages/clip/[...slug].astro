@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
+import AdSenseUnit from '../../components/AdSenseUnit.astro';
 import ClipArticle from '../../components/ClipArticle.astro';
 import ClipDigest from '../../components/ClipDigest.astro';
 import TagList from '../../components/TagList.astro';
@@ -76,6 +77,8 @@ const jsonLd = buildArticleJsonLd({
 		<ClipDigest digestHtml={digestHtml} />
 
 		{article && <ClipArticle html={articleHtml} pagefind />}
+
+		<AdSenseUnit />
 	</article>
 </Layout>
 
