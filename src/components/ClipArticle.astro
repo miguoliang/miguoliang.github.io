@@ -22,6 +22,7 @@ const { html, pagefind = false } = Astro.props;
 		font-size: clamp(0.92rem, 0.15vw + 0.88rem, 1rem);
 		line-height: 1.75;
 		color: var(--text-color);
+		overflow-wrap: anywhere;
 	}
 
 	.prose :global(h3) {
@@ -62,5 +63,12 @@ const { html, pagefind = false } = Astro.props;
 
 	.prose :global(a) {
 		color: var(--link-color);
+		overflow-wrap: anywhere;
+		word-break: break-word;
+	}
+
+	.prose :global(code) {
+		overflow-wrap: anywhere;
+		word-break: break-word;
 	}
 </style>

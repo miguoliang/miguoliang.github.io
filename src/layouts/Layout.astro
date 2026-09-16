@@ -281,6 +281,7 @@ const structuredData = jsonLd || defaultJsonLd;
 		justify-content: space-between;
 		padding: 0.85rem 0;
 		width: 100%;
+		max-width: 100%;
 		box-sizing: border-box;
 		border-bottom: 1px solid var(--border-color);
 		background: var(--nav-bg);
@@ -327,6 +328,9 @@ const structuredData = jsonLd || defaultJsonLd;
 		justify-content: flex-end;
 		gap: 0.25rem;
 		padding-right: var(--region-x);
+		box-sizing: border-box;
+		max-width: 100%;
+		min-width: 0;
 	}
 
 	.nav-links a {
@@ -373,6 +377,7 @@ const structuredData = jsonLd || defaultJsonLd;
 		display: flex;
 		flex-direction: column;
 		width: 100%;
+		min-width: 0;
 		min-height: 0;
 	}
 
@@ -381,11 +386,28 @@ const structuredData = jsonLd || defaultJsonLd;
 		display: flex;
 		flex-direction: column;
 		width: 100%;
+		min-width: 0;
 		min-height: 0;
 		max-width: none;
 		margin: 0;
 		padding: 0;
 		box-sizing: border-box;
+		overflow-wrap: anywhere;
+	}
+
+	.content :global(a),
+	.content :global(code) {
+		overflow-wrap: anywhere;
+		word-break: break-word;
+	}
+
+	.content :global(pre) {
+		max-width: 100%;
+		overflow-x: auto;
+	}
+
+	.content :global(table) {
+		max-width: 100%;
 	}
 
 	.content.wide {

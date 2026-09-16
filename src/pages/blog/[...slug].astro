@@ -67,6 +67,7 @@ const toc = headings
 		letter-spacing: 0.01em;
 		color: var(--text-color);
 		padding-bottom: 4rem;
+		overflow-wrap: anywhere;
 		transition: color 0.3s ease;
 	}
 	
@@ -119,6 +120,8 @@ const toc = headings
 	article :global(a) {
 		color: var(--link-color);
 		text-decoration: underline;
+		overflow-wrap: anywhere;
+		word-break: break-word;
 		transition: color 0.2s ease;
 	}
 	
@@ -132,6 +135,8 @@ const toc = headings
 		padding: 0.2em 0.4em;
 		border-radius: 3px;
 		font-size: 0.9em;
+		overflow-wrap: anywhere;
+		word-break: break-word;
 		transition: background-color 0.3s ease, color 0.3s ease;
 	}
 	
