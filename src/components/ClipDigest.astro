@@ -15,6 +15,7 @@ const { digestHtml } = Astro.props;
 <style>
 	.clip-digest {
 		flex-shrink: 0;
+		min-width: 0;
 		padding: var(--region-y) var(--region-x);
 		border-bottom: 1px solid var(--border-color);
 	}
@@ -23,6 +24,13 @@ const { digestHtml } = Astro.props;
 		font-size: 0.95rem;
 		line-height: 1.75;
 		color: var(--text-color);
+		overflow-wrap: anywhere;
+	}
+
+	.digest-prose :global(a),
+	.digest-prose :global(code) {
+		overflow-wrap: anywhere;
+		word-break: break-word;
 	}
 
 	.digest-prose :global(h3) {
@@ -68,6 +76,8 @@ const { digestHtml } = Astro.props;
 		padding: 0.5rem 0.65rem;
 		text-align: left;
 		vertical-align: top;
+		overflow-wrap: anywhere;
+		word-break: break-word;
 	}
 
 	.digest-prose :global(th) {

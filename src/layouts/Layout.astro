@@ -373,6 +373,7 @@ const structuredData = jsonLd || defaultJsonLd;
 		display: flex;
 		flex-direction: column;
 		width: 100%;
+		min-width: 0;
 		min-height: 0;
 	}
 
@@ -381,11 +382,28 @@ const structuredData = jsonLd || defaultJsonLd;
 		display: flex;
 		flex-direction: column;
 		width: 100%;
+		min-width: 0;
 		min-height: 0;
 		max-width: none;
 		margin: 0;
 		padding: 0;
 		box-sizing: border-box;
+		overflow-wrap: anywhere;
+	}
+
+	.content :global(a),
+	.content :global(code) {
+		overflow-wrap: anywhere;
+		word-break: break-word;
+	}
+
+	.content :global(pre) {
+		max-width: 100%;
+		overflow-x: auto;
+	}
+
+	.content :global(table) {
+		max-width: 100%;
 	}
 
 	.content.wide {
