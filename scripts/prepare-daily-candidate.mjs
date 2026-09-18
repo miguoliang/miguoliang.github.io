@@ -4,48 +4,33 @@
  * Exits 0 with "SKIP" or "READY" on stdout for CI.
  */
 
-import { writeFileSync, mkdirSync, readFileSync, readdirSync } from 'node:fs';
+import { writeFileSync, mkdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { discover } from './discover-clips.mjs';
 import { todayEdition } from './lib/slug.mjs';
+import {
+	buildPriority,
+	loadClippingsMeta,
+	pickCandidate,
+	recentSourceIdsFromClippings,
+} from './lib/pick-daily-candidate.mjs';
 
 const root = process.cwd();
 const outDir = join(root, 'data');
 const outFile = join(outDir, 'daily-candidate.json');
 const automation = JSON.parse(readFileSync(join(root, 'config/automation.json'), 'utf8'));
+const clipSources = JSON.parse(readFileSync(join(root, 'config/clip-sources.json'), 'utf8'));
+const PRIORITY = buildPriority(clipSources.sources);
+const clippingsDir = join(root, 'src/content/clippings');
 
-const PRIORITY = [
-	'anthropic-engineering',
-	'cursor-blog',
-	'simon-willison',
-	'saastr',
-	'openai-blog',
-	'google-ai',
-	'cloudflare-ai',
-];
-
-function editionAlreadyPublished(edition) {
-	const clippingsDir = join(root, 'src/content/clippings');
-	for (const file of readdirSync(clippingsDir).filter((f) => f.endsWith('.md'))) {
-		const content = readFileSync(join(clippingsDir, file), 'utf8');
-		if (new RegExp(`^edition:\\s*["']?${edition}["']?\\s*$`, 'm').test(content)) {
-			return file;
-		}
-	}
-	return null;
-}
-
-function pickCandidate(candidates) {
-	for (const id of PRIORITY) {
-		const hit = candidates.find((c) => c.sourceId === id);
-		if (hit) return hit;
-	}
-	return candidates[0];
+function editionAlreadyPublished(edition, metas) {
+	return metas.find((m) => m.edition === edition)?.file ?? null;
 }
 
 async function main() {
 	const edition = todayEdition(automation.timezone);
-	const existing = editionAlreadyPublished(edition);
+	const metas = loadClippingsMeta(clippingsDir);
+	const existing = editionAlreadyPublished(edition, metas);
 	if (existing) {
 		console.log(`SKIP: edition ${edition} already published (${existing})`);
 		return;
@@ -60,8 +45,11 @@ async function main() {
 		return;
 	}
 
+	const { ids: recentSourceIds } = recentSourceIdsFromClippings(metas, clipSources.sources);
+	// Prefer unused sources in the last 5 editions; PRIORITY is a soft tie-break only.
+	const picked = pickCandidate(candidates, recentSourceIds, PRIORITY);
 	const candidate = {
-		...pickCandidate(candidates),
+		...picked,
 		edition,
 		editionType: 'daily',
 		preparedAt: new Date().toISOString(),
