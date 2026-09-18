@@ -162,6 +162,37 @@ function isSkippableListingUrl(url, source) {
 	return false;
 }
 
+function compareCandidates(a, b) {
+	const da = a.date ? new Date(a.date).getTime() : 0;
+	const db = b.date ? new Date(b.date).getTime() : 0;
+	if (da !== db) return db - da;
+	return (a.listOrder ?? 999) - (b.listOrder ?? 999);
+}
+
+export function selectBySourceRoundRobin(candidates, maxTotal) {
+	const bySource = new Map();
+	for (const candidate of [...candidates].sort(compareCandidates)) {
+		if (!bySource.has(candidate.sourceId)) bySource.set(candidate.sourceId, []);
+		bySource.get(candidate.sourceId).push(candidate);
+	}
+	const queues = [...bySource.values()];
+	const selected = [];
+	let depth = 0;
+	while (selected.length < maxTotal) {
+		let added = false;
+		for (const queue of queues) {
+			if (depth < queue.length) {
+				selected.push(queue[depth]);
+				added = true;
+				if (selected.length >= maxTotal) break;
+			}
+		}
+		if (!added) break;
+		depth++;
+	}
+	return selected;
+}
+
 function withinLookback(dateStr) {
 	if (!dateStr) return true;
 	const parsed = new Date(dateStr);
@@ -205,15 +236,8 @@ export async function discover() {
 		}
 	}
 
-	candidates.sort((a, b) => {
-		const da = a.date ? new Date(a.date).getTime() : 0;
-		const db = b.date ? new Date(b.date).getTime() : 0;
-		if (da !== db) return db - da;
-		return a.listOrder - b.listOrder;
-	});
-
 	return {
-		candidates: candidates.slice(0, config.maxTotal),
+		candidates: selectBySourceRoundRobin(candidates, config.maxTotal),
 		errors,
 		existingCount: existing.size,
 	};
