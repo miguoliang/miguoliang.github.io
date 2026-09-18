@@ -117,15 +117,13 @@ async function fetchListingItems(source) {
 	const seen = new Set();
 	const items = [];
 
-	const hrefPattern = new RegExp(
-		`href="((?:${source.urlPrefix.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}|${pathPrefix}[^"#?]+))"`,
-		'g',
-	);
+	const escapedPrefix = source.urlPrefix.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+	const escapedPath = pathPrefix.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+	const hrefPattern = new RegExp(`href="((?:${escapedPrefix}|${escapedPath})[^"#?]*)"`, 'g');
 
 	for (const match of html.matchAll(hrefPattern)) {
 		const url = normalizeUrl(new URL(match[1], base).toString());
-		if (seen.has(url) || url.endsWith('/engineering') || url.endsWith('/blog')) continue;
-		if (url.includes('/topic/')) continue;
+		if (seen.has(url) || isSkippableListingUrl(url, source)) continue;
 		seen.add(url);
 		const slug = url.split('/').filter(Boolean).pop() ?? 'article';
 		const title = slug.replace(/-/g, ' ');
@@ -147,6 +145,21 @@ async function fetchRssItems(source) {
 
 	const xml = await response.text();
 	return parseRssItems(xml, source).slice(0, config.maxPerSource * 2);
+}
+
+function isSkippableListingUrl(url, source) {
+	let parsed;
+	try {
+		parsed = new URL(url);
+	} catch {
+		return true;
+	}
+	const path = parsed.pathname.replace(/\/$/, '') || '/';
+	const listingPath = new URL(source.listingUrl).pathname.replace(/\/$/, '') || '/';
+	if (path === listingPath) return true;
+	if (/(?:^|\/)(?:topic|category|tag|page|author)(?:\/|$)/.test(parsed.pathname)) return true;
+	if (parsed.searchParams.has('page')) return true;
+	return false;
 }
 
 function withinLookback(dateStr) {
