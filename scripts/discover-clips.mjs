@@ -117,15 +117,13 @@ async function fetchListingItems(source) {
 	const seen = new Set();
 	const items = [];
 
-	const hrefPattern = new RegExp(
-		`href="((?:${source.urlPrefix.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}|${pathPrefix}[^"#?]+))"`,
-		'g',
-	);
+	const escapedPrefix = source.urlPrefix.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+	const escapedPath = pathPrefix.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+	const hrefPattern = new RegExp(`href="((?:${escapedPrefix}|${escapedPath})[^"#?]*)"`, 'g');
 
 	for (const match of html.matchAll(hrefPattern)) {
 		const url = normalizeUrl(new URL(match[1], base).toString());
-		if (seen.has(url) || url.endsWith('/engineering') || url.endsWith('/blog')) continue;
-		if (url.includes('/topic/')) continue;
+		if (seen.has(url) || isSkippableListingUrl(url, source)) continue;
 		seen.add(url);
 		const slug = url.split('/').filter(Boolean).pop() ?? 'article';
 		const title = slug.replace(/-/g, ' ');
@@ -147,6 +145,52 @@ async function fetchRssItems(source) {
 
 	const xml = await response.text();
 	return parseRssItems(xml, source).slice(0, config.maxPerSource * 2);
+}
+
+function isSkippableListingUrl(url, source) {
+	let parsed;
+	try {
+		parsed = new URL(url);
+	} catch {
+		return true;
+	}
+	const path = parsed.pathname.replace(/\/$/, '') || '/';
+	const listingPath = new URL(source.listingUrl).pathname.replace(/\/$/, '') || '/';
+	if (path === listingPath) return true;
+	if (/(?:^|\/)(?:topic|category|tag|page|author)(?:\/|$)/.test(parsed.pathname)) return true;
+	if (parsed.searchParams.has('page')) return true;
+	return false;
+}
+
+function compareCandidates(a, b) {
+	const da = a.date ? new Date(a.date).getTime() : 0;
+	const db = b.date ? new Date(b.date).getTime() : 0;
+	if (da !== db) return db - da;
+	return (a.listOrder ?? 999) - (b.listOrder ?? 999);
+}
+
+export function selectBySourceRoundRobin(candidates, maxTotal) {
+	const bySource = new Map();
+	for (const candidate of [...candidates].sort(compareCandidates)) {
+		if (!bySource.has(candidate.sourceId)) bySource.set(candidate.sourceId, []);
+		bySource.get(candidate.sourceId).push(candidate);
+	}
+	const queues = [...bySource.values()];
+	const selected = [];
+	let depth = 0;
+	while (selected.length < maxTotal) {
+		let added = false;
+		for (const queue of queues) {
+			if (depth < queue.length) {
+				selected.push(queue[depth]);
+				added = true;
+				if (selected.length >= maxTotal) break;
+			}
+		}
+		if (!added) break;
+		depth++;
+	}
+	return selected;
 }
 
 function withinLookback(dateStr) {
@@ -192,15 +236,8 @@ export async function discover() {
 		}
 	}
 
-	candidates.sort((a, b) => {
-		const da = a.date ? new Date(a.date).getTime() : 0;
-		const db = b.date ? new Date(b.date).getTime() : 0;
-		if (da !== db) return db - da;
-		return a.listOrder - b.listOrder;
-	});
-
 	return {
-		candidates: candidates.slice(0, config.maxTotal),
+		candidates: selectBySourceRoundRobin(candidates, config.maxTotal),
 		errors,
 		existingCount: existing.size,
 	};

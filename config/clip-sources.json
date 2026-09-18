@@ -1,7 +1,7 @@
 {
   "lookbackDays": 14,
   "maxPerSource": 4,
-  "maxTotal": 12,
+  "maxTotal": 24,
   "excludeUrlPatterns": [
     "arxiv.org",
     "/pdf/",
@@ -81,8 +81,8 @@
       "name": "Latent Space",
       "rss": "https://www.latent.space/feed",
       "tags": ["行业趋势", "应用技巧"],
-      "enabled": false,
-      "note": "默认关闭：访谈质量高但偶有偏理论内容，确认后可开启"
+      "enabled": true,
+      "note": "访谈与产业实践；偏理论标题仍走排除规则"
     },
     {
       "id": "anthropic-engineering",
@@ -101,6 +101,80 @@
       "tags": ["应用技巧", "Cursor"],
       "enabled": true,
       "note": "无 RSS，从 blog 列表页抓取"
+    },
+    {
+      "id": "huggingface-blog",
+      "name": "Hugging Face Blog",
+      "rss": "https://huggingface.co/blog/feed.xml",
+      "tags": ["应用技巧", "行业趋势"],
+      "enabled": true,
+      "note": "开源模型、工具与工程实践"
+    },
+    {
+      "id": "vercel-blog",
+      "name": "Vercel Blog",
+      "listingUrl": "https://vercel.com/blog",
+      "urlPrefix": "https://vercel.com/blog/",
+      "tags": ["应用技巧", "行业趋势"],
+      "enabled": true,
+      "note": "无稳定 blog-only RSS（atom 混有 changelog）；从 blog 列表页抓取"
+    },
+    {
+      "id": "github-ai",
+      "name": "GitHub Blog (AI & ML)",
+      "rss": "https://github.blog/ai-and-ml/feed/",
+      "tags": ["应用技巧"],
+      "enabled": true,
+      "note": "Copilot / AI 工程实践（AI & ML 标签源）"
+    },
+    {
+      "id": "meta-ai",
+      "name": "Meta AI Blog",
+      "listingUrl": "https://ai.meta.com/blog/",
+      "urlPrefix": "https://ai.meta.com/blog/",
+      "tags": ["行业趋势", "应用技巧"],
+      "enabled": true,
+      "note": "无 RSS，从 blog 列表页抓取；论文向标题会被过滤"
+    },
+    {
+      "id": "microsoft-opensource",
+      "name": "Microsoft Open Source Blog",
+      "rss": "https://opensource.microsoft.com/blog/feed/",
+      "tags": ["应用技巧", "开源"],
+      "enabled": true,
+      "note": "开源与 agent 工程。通用 Azure Blog 非 AI 内容过多，未收录；Azure AI 实践见 microsoft-agent-framework"
+    },
+    {
+      "id": "microsoft-agent-framework",
+      "name": "Microsoft Agent Framework",
+      "rss": "https://devblogs.microsoft.com/agent-framework/feed/",
+      "tags": ["应用技巧", "Agents"],
+      "enabled": true,
+      "note": "Azure / Microsoft 侧的 agent 工程实践（比通用 Azure Blog 更贴站点定位）"
+    },
+    {
+      "id": "langchain-blog",
+      "name": "LangChain Blog",
+      "rss": "https://www.langchain.com/blog/rss.xml",
+      "tags": ["应用技巧", "Agents"],
+      "enabled": true,
+      "note": "Agent / LangGraph 产品与工程实践"
+    },
+    {
+      "id": "sourcegraph-blog",
+      "name": "Sourcegraph Blog",
+      "rss": "https://sourcegraph.com/blog/feed.rss",
+      "tags": ["应用技巧"],
+      "enabled": true,
+      "note": "代码搜索与 coding agent 工程实践"
+    },
+    {
+      "id": "continue-blog",
+      "name": "Continue Blog",
+      "rss": "https://blog.continue.dev/feed",
+      "tags": ["应用技巧"],
+      "enabled": true,
+      "note": "开源 AI 编程工具的工程与流程观察"
     }
   ]
 }
