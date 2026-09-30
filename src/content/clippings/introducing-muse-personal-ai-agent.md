@@ -4,7 +4,7 @@ description: "Meta 于 2026-09-08 推出 Muse：在独立云端 Secure VM 里跑
 url: "https://about.fb.com/news/2026/09/introducing-muse-personal-ai-agent/"
 source: "Meta Newsroom"
 pubDate: 2026-09-08
-edition: "2026-09-08"
+edition: "2026-09-30"
 editionType: daily
 tags: ["行业趋势", "Agents"]
 author: "Meta"
