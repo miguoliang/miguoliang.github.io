@@ -8,9 +8,12 @@ import {
 	loadClippingsMeta,
 	parseClippingMeta,
 	pickCandidate,
+	pickVerifiedCandidate,
+	rankCandidates,
 	recentSourceIdsFromClippings,
 	resolveSourceId,
 } from './pick-daily-candidate.mjs';
+import { classifyClipTopic, topicHaystack } from './clip-topic.mjs';
 
 const root = process.cwd();
 const clipSources = JSON.parse(readFileSync(join(root, 'config/clip-sources.json'), 'utf8'));
@@ -88,5 +91,55 @@ test('current history does not auto-pick Simon when alternatives exist', () => {
 	];
 	const picked = pickCandidate(candidates, ids, priority);
 	assert.notEqual(picked.sourceId, 'simon-willison');
+	assert.equal(picked.sourceId, 'huggingface-blog');
+});
+
+test('application story beats infra titles even if that source was recent', () => {
+	const candidates = [
+		{
+			...cand('cloudflare-ai', "Cut your AI spend with AI Gateway's Auto Router"),
+			url: 'https://blog.cloudflare.com/auto-router',
+		},
+		{
+			...cand('simon-willison', 'Quoting Matthew Green'),
+			url: 'https://simonwillison.net/2026/Oct/1/matthew-green',
+		},
+		cand(
+			'github-ai',
+			'GitHub Copilot app for beginners: how to build custom workflows with canvases',
+		),
+	];
+	const picked = pickCandidate(candidates, new Set(['github-ai']), priority);
+	assert.equal(picked.sourceId, 'github-ai');
+	assert.equal(rankCandidates(candidates, new Set(['github-ai']), priority)[0].sourceId, 'github-ai');
+});
+
+test('unused application story still beats a recent application story', () => {
+	const candidates = [
+		cand('github-ai', 'GitHub Copilot app for beginners: how to build custom workflows'),
+		cand('saastr', 'How we used AI to close support tickets faster'),
+	];
+	const picked = pickCandidate(candidates, new Set(['github-ai']), priority);
+	assert.equal(picked.sourceId, 'saastr');
+});
+
+test('all specialist-infra candidates yield no pick', () => {
+	const candidates = [
+		cand('cloudflare-ai', 'Auto Router internals'),
+		cand('cursor-blog', 'Mixture-of-Kittens megakernel'),
+		cand('simon-willison', 'smolmachines untrusted sandbox'),
+	];
+	assert.equal(pickCandidate(candidates, new Set(), priority), null);
+});
+
+test('verified pick skips a sandbox article whose title was vague', async () => {
+	const candidates = [cand('simon-willison', 'A short quote'), cand('huggingface-blog', 'HF latest')];
+	const withoutVerify = pickCandidate(candidates, new Set(), priority);
+	assert.equal(withoutVerify.sourceId, 'simon-willison');
+
+	const picked = await pickVerifiedCandidate(candidates, new Set(), priority, async (c) => {
+		if (c.sourceId === 'simon-willison') return 'infra';
+		return classifyClipTopic(topicHaystack(c));
+	});
 	assert.equal(picked.sourceId, 'huggingface-blog');
 });

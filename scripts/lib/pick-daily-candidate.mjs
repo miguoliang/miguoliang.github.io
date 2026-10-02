@@ -1,15 +1,18 @@
 /**
- * Daily clip picker: soft quality order + demote sources used in recent editions.
+ * Daily clip picker: application stories first, then unused sources, then PRIORITY.
+ * Specialist infrastructure is never the daily main clipping (from 2026-10-03).
  */
 
 import { readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
+import { TOPIC_APPLICATION, TOPIC_INFRA, classifyClipTopic, topicHaystack } from './clip-topic.mjs';
 
 export const RECENT_EDITION_WINDOW = 5;
 
 /**
  * Soft quality preference (must match clip-sources.json `id` / discover `sourceId`).
- * Recent-edition demotion is applied first and beats this order.
+ * Topic policy (application vs infra) is applied first; unused-source demotion
+ * then beats this order inside each topic group.
  */
 export const PRIORITY_HEAD = [
 	'anthropic-engineering',
@@ -126,19 +129,87 @@ export function recentSourceIdsFromClippings(
 	return { ids, editions: [...recent] };
 }
 
+function asRecentSet(recentSourceIds) {
+	return recentSourceIds instanceof Set ? recentSourceIds : new Set(recentSourceIds ?? []);
+}
+
+function sortGroupByPriority(items, priority) {
+	const ordered = [];
+	const seen = new Set();
+	for (const id of priority) {
+		for (const item of items) {
+			if (item.sourceId === id && !seen.has(item)) {
+				ordered.push(item);
+				seen.add(item);
+			}
+		}
+	}
+	for (const item of items) {
+		if (!seen.has(item)) ordered.push(item);
+	}
+	return ordered;
+}
+
+function splitUnusedThenRecent(items, recent) {
+	const unused = items.filter((c) => !recent.has(c.sourceId));
+	const used = items.filter((c) => recent.has(c.sourceId));
+	if (!unused.length) return [items];
+	return used.length ? [unused, used] : [unused];
+}
+
 /**
- * Prefer a source not used in the last N calendar editions.
- * Among that pool (or all candidates if every source was recent), use PRIORITY.
- * Demotion beats a high-priority repeat such as Simon always sitting third.
+ * Rank for the daily: drop specialist infra, prefer application stories,
+ * then unused sources in the last N editions, then PRIORITY.
+ */
+export function rankCandidates(candidates, recentSourceIds, priority = PRIORITY_HEAD) {
+	if (!candidates.length) return [];
+	const recent = asRecentSet(recentSourceIds);
+	const notInfra = candidates.filter(
+		(c) => classifyClipTopic(topicHaystack(c)) !== TOPIC_INFRA,
+	);
+	const application = notInfra.filter(
+		(c) => classifyClipTopic(topicHaystack(c)) === TOPIC_APPLICATION,
+	);
+	const unknown = notInfra.filter(
+		(c) => classifyClipTopic(topicHaystack(c)) !== TOPIC_APPLICATION,
+	);
+
+	const groups = [];
+	if (application.length) groups.push(...splitUnusedThenRecent(application, recent));
+	if (unknown.length) groups.push(...splitUnusedThenRecent(unknown, recent));
+
+	const ranked = [];
+	for (const group of groups) {
+		ranked.push(...sortGroupByPriority(group, priority));
+	}
+	return ranked;
+}
+
+/**
+ * Prefer an application story not used in the last N calendar editions.
+ * Infra/theory titles are dropped. If nothing remains, return null (caller SKIPs).
  */
 export function pickCandidate(candidates, recentSourceIds, priority = PRIORITY_HEAD) {
-	if (!candidates.length) return null;
-	const recent = recentSourceIds instanceof Set ? recentSourceIds : new Set(recentSourceIds ?? []);
-	const unused = candidates.filter((c) => !recent.has(c.sourceId));
-	const pool = unused.length ? unused : candidates;
-	for (const id of priority) {
-		const hit = pool.find((c) => c.sourceId === id);
-		if (hit) return hit;
+	return rankCandidates(candidates, recentSourceIds, priority)[0] ?? null;
+}
+
+/**
+ * After title/url ranking, `verifyTopic(candidate)` may fetch the article.
+ * Drop infra; take the first application story; otherwise the first remaining unknown.
+ */
+export async function pickVerifiedCandidate(
+	candidates,
+	recentSourceIds,
+	priority = PRIORITY_HEAD,
+	verifyTopic = async (candidate) => classifyClipTopic(topicHaystack(candidate)),
+) {
+	const ranked = rankCandidates(candidates, recentSourceIds, priority);
+	let unknownFallback = null;
+	for (const candidate of ranked) {
+		const topic = await verifyTopic(candidate);
+		if (topic === TOPIC_INFRA) continue;
+		if (topic === TOPIC_APPLICATION) return candidate;
+		unknownFallback ??= candidate;
 	}
-	return pool[0];
+	return unknownFallback;
 }

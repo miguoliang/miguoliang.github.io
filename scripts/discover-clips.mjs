@@ -43,6 +43,16 @@ function normalizeUrl(url) {
 	}
 }
 
+function rssDescription(block) {
+	const raw =
+		block.match(/<summary[^>]*>([\s\S]*?)<\/summary>/)?.[1] ??
+		block.match(/<content:encoded[^>]*>([\s\S]*?)<\/content:encoded>/)?.[1] ??
+		block.match(/<content[^>]*>([\s\S]*?)<\/content>/)?.[1] ??
+		block.match(/<description[^>]*>([\s\S]*?)<\/description>/)?.[1] ??
+		'';
+	return decodeEntities(raw).slice(0, 800);
+}
+
 function decodeEntities(text) {
 	return text
 		.replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g, '$1')
@@ -85,7 +95,8 @@ function parseRssItems(xml, source) {
 				entry.match(/<published[^>]*>([\s\S]*?)<\/published>/)?.[1] ??
 				entry.match(/<updated[^>]*>([\s\S]*?)<\/updated>/)?.[1] ??
 				'';
-			if (title && url) items.push({ title, url, date, source });
+			const description = rssDescription(entry);
+			if (title && url) items.push({ title, url, date, description, source });
 		}
 	} else {
 		const blocks = xml.match(/<item[\s\S]*?<\/item>/g) ?? [];
@@ -97,7 +108,8 @@ function parseRssItems(xml, source) {
 					'',
 			);
 			const date = block.match(/<pubDate[^>]*>([\s\S]*?)<\/pubDate>/)?.[1] ?? '';
-			if (title && url) items.push({ title, url, date, source });
+			const description = rssDescription(block);
+			if (title && url) items.push({ title, url, date, description, source });
 		}
 	}
 
@@ -127,7 +139,7 @@ async function fetchListingItems(source) {
 		seen.add(url);
 		const slug = url.split('/').filter(Boolean).pop() ?? 'article';
 		const title = slug.replace(/-/g, ' ');
-		items.push({ title, url, date: '', source, listOrder: items.length });
+		items.push({ title, url, date: '', description: '', source, listOrder: items.length });
 	}
 
 	return items.slice(0, config.maxPerSource).map((item, index) => ({
@@ -220,6 +232,7 @@ export async function discover() {
 					title: item.title,
 					url,
 					date: item.date || null,
+					description: item.description || '',
 					listOrder: item.listOrder ?? 999,
 					source: source.name,
 					sourceId: source.id,
