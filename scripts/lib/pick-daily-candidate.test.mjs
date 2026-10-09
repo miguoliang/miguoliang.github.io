@@ -77,11 +77,11 @@ edition: "2026-09-18"
 	assert.equal(meta.url, 'https://simonwillison.net/2026/Sep/17/targeted-attacks-on-rustaceans');
 });
 
-test('current history does not auto-pick Simon when alternatives exist', () => {
+test('current history does not auto-pick a recently used source when alternatives exist', () => {
 	const metas = loadClippingsMeta(join(root, 'src/content/clippings'));
 	const { ids, editions } = recentSourceIdsFromClippings(metas, clipSources.sources);
 	assert.ok(editions.length >= 5, 'expected at least 5 published editions');
-	assert.ok(ids.has('simon-willison'), `expected Simon in last 5 editions, got ${[...ids].join(',')}`);
+	assert.ok(ids.size > 0, `expected recent source ids, got ${[...ids].join(',')}`);
 
 	const candidates = [
 		cand('simon-willison', 'Simon latest'),
@@ -90,8 +90,11 @@ test('current history does not auto-pick Simon when alternatives exist', () => {
 		cand('saastr', 'SaaStr latest'),
 	];
 	const picked = pickCandidate(candidates, ids, priority);
-	assert.notEqual(picked.sourceId, 'simon-willison');
-	assert.equal(picked.sourceId, 'huggingface-blog');
+	assert.ok(
+		!ids.has(picked.sourceId),
+		`should not pick recently used source ${picked.sourceId}; recent=${[...ids].join(',')}`,
+	);
+	assert.equal(picked.sourceId, 'simon-willison');
 });
 
 test('application story beats infra titles even if that source was recent', () => {
