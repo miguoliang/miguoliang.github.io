@@ -12,6 +12,11 @@ function isTransientStatus(status) {
 	return status === 429 || status >= 500;
 }
 
+/** Cloudflare bot challenge: page exists, but this UA/IP cannot pass the interstitial. */
+function isCloudflareChallenge(response) {
+	return response.status === 403 && response.headers.get('cf-mitigated') === 'challenge';
+}
+
 function sleep(ms) {
 	return new Promise((resolve) => setTimeout(resolve, ms));
 }
@@ -56,7 +61,7 @@ for (const file of files) {
 
 		if (response.ok) {
 			console.log(`OK ${file} -> ${url}`);
-		} else if (isTransientStatus(response.status)) {
+		} else if (isTransientStatus(response.status) || isCloudflareChallenge(response)) {
 			warnings.push(`${file}: ${response.status} ${url}`);
 			console.warn(`WARN ${file}: ${response.status} ${url}`);
 		} else {
