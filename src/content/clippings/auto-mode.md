@@ -1,6 +1,6 @@
 ---
 title: "Claude Code Auto Mode 成默认：人点「允许」比自动审批更危险"
-description: "Anthropic 8 月 14 日起把 Auto Mode 设为 Pro/Max/Team 默认；评测显示确认疲劳下仅 13.6% 人会拒危险命令，Auto Mode 可拦 89%。"
+description: "Anthropic 从 8 月 14 日起把 Auto Mode 设为默认。1053 人评测里只有 13.6% 会拒绝危险命令；自动审批能拦住约 89%，仍有约 11% 漏拦，沙箱不能省。"
 url: "https://simonwillison.net/2026/Aug/8/auto-mode"
 source: "Simon Willison"
 pubDate: 2026-08-08

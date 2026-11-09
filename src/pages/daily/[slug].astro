@@ -15,8 +15,21 @@ export async function getStaticPaths() {
 }
 
 const { group } = Astro.props;
-const title = formatEditionTitle(group.edition);
-const description = `${title} — 精选 AI 资讯网摘。`;
+const heading = formatEditionTitle(group.edition);
+const featured = group.items[0];
+// W45 GSC：/daily/2026-07-28/ 有展示无点击；页面标题保持日期，搜索标题带上当日精选。
+const seo =
+	group.edition === '2026-07-28' && featured
+		? {
+				title: 'AI 日刊 2026-07-28：Kimi K3 开放权重 1.56TB，商用许可更严 | AI 网摘',
+				description:
+					'当日精选：Kimi K3 开放权重约 1.56TB，并收紧商用许可——先看许可再决定能不能进生产。',
+			}
+		: {
+				title: heading,
+				description: `${heading} — 精选 AI 资讯网摘。`,
+			};
+const { title, description } = seo;
 const siteUrl = Astro.site ?? Astro.url.origin;
 const jsonLd = buildArticleJsonLd({
 	title,
@@ -37,7 +50,7 @@ const jsonLd = buildArticleJsonLd({
 	wide
 >
 	<header class="page-header" data-pagefind-body>
-		<h1>{title}</h1>
+		<h1>{heading}</h1>
 		<p class="meta">{group.items.length} 篇 · <a href="/daily">全部日刊</a></p>
 	</header>
 

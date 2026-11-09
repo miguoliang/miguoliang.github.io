@@ -1,6 +1,6 @@
 ---
-title: "Qwen 3.8 27B 对标千亿级模型：Artificial Analysis 指数 52 分"
-description: "Simon Willison 援引榜单：27B 开源模型与 GPT-5.6 Luna (max) 同分，仅落后 GLM-5.2、DeepSeek V4 Pro 一分——教你如何用第三方指数筛模型、何时值得本机跑小模型。"
+title: "Qwen 3.8 27B 拿 52 分，与 GPT-5.6 Luna 同分"
+description: "Simon Willison：27B 开源模型拿到 52 分，与 GPT-5.6 Luna 同分，只比更大的模型低 1 分。先用第三方榜单筛同分带，再算本机和 API 成本，并提防默认想太久。"
 url: "https://simonwillison.net/2026/Aug/17/qwen-38-27b-scores-52"
 source: "Simon Willison"
 pubDate: 2026-08-17

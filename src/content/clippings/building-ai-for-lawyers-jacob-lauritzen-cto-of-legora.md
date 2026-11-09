@@ -1,6 +1,6 @@
 ---
 title: "Latent Space：律所用 Legora 一次审一万份合同，先改前 10 行再全跑；起草点回 PDF，尽调红旗仍要人看"
-description: "Legora 给律师起草改 Word、表格式审一万份合同：先跑 10 行再全表，引用点回 PDF。自家收购尽调也用它找红旗；计时收费的常规审阅在变固定价。"
+description: "律所用 Legora 一次审约一万份合同：先改前 10 行再全跑，引用点回 PDF。尽调红旗仍要人看；常规审阅在改固定价。"
 url: "https://latent.space/p/building-ai-for-lawyers-jacob-lauritzen-cto-of-legora"
 source: "Latent Space"
 pubDate: 2026-11-02

@@ -1,6 +1,6 @@
 ---
 title: "OpenAI：UCSF Zhao Lab 用 GPT-Rosalind 一次查十种药参数，实验室最多 30 席免费用一年"
-description: "Zhao Lab 用 GPT-Rosalind 接 PubChem / NCBI，一次查十种药并分清预测值和实验值。合格美国高校实验室最多 30 个席位、免费用 12 个月。"
+description: "UCSF Zhao Lab 用 GPT-Rosalind 一次查十种药理化参数，并分栏记下预测值和实验值。合格美国高校实验室最多 30 席、免费用 12 个月，不含 API。"
 url: "https://openai.com/index/introducing-the-rosalind-academic-plan"
 source: "OpenAI Blog"
 pubDate: 2026-10-15

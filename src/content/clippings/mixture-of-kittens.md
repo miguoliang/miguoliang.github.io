@@ -1,6 +1,6 @@
 ---
-title: "Mixture-of-Kittens：Cursor 开源 MoE 训练 Megakernel"
-description: "训练 Composer 时 MoE 层吃掉过半算力；Cursor 把通信与计算熔进单一确定性内核，GB300 NVL72 上吞吐最高提升 2.37 倍并已开源。"
+title: "Cursor 开源 Mixture-of-Kittens：训练吞吐最高 2.37 倍"
+description: "训练 Composer 时，混合专家层吃掉过半算力。Cursor 把通信和计算熔进同一内核，吞吐最高 2.37 倍、端到端 1.41 倍，并已开源。"
 url: "https://cursor.com/blog/mixture-of-kittens"
 source: "Cursor"
 pubDate: 2026-08-06
